@@ -41,12 +41,6 @@ class Player(pygame.sprite.Sprite, Character):
     def change_image_list(self):
         pass
     # 画像は先にロードしてリストに キャラ全部のリストを作って 指定のキャラの時に呼び出し
-
-    
-    # 文字列の結合
-    # s = 'aaa' + 'bbb' + 'ccc'
-    # print(s)
-    # # aaabbbccc
       
     # 移動処理  
     def get_input(self):
@@ -106,7 +100,7 @@ class Player(pygame.sprite.Sprite, Character):
     # ジャンプ処理    
     def jump(self):
         if self.landing:
-            if self.jump_coount < 9:
+            if self.jump_coount < 12:
                 self.rect.y -=10
             elif self.jump_coount < 16:
                 self.rect.y -= 5
