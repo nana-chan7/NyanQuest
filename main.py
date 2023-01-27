@@ -1,7 +1,6 @@
 import sys, pygame, cv2
 import random
 from pygame.locals import *
-import numpy as np
 from game import Game, Phase
 from filed import Filed
 
@@ -176,3 +175,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+         

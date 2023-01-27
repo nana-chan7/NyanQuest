@@ -1,0 +1,86 @@
+import pygame
+from game import Game
+from character import Character
+
+
+class Player(Character,pygame.sprite.Sprite):
+    CHANGE_IMAGE_INTERVAL = 7
+    def __init__(self,pos):
+        super().__init__()
+        self.image = pygame.Surface((32,64))
+        self.image.blit('red')
+        self.rect = self.image.get_rect(topleft=pos)
+        # プレイヤーの画像を作成
+        self.image_list = (pygame.image.load("chara_images/obake_neko.png"),
+                           pygame.image.load("chara_images/robo_neko.png"))
+
+        # 親クラスのコンストラクタを実行
+        super().__init__(self.image_list, Player.CHANGE_IMAGE_INTERVAL)
+        # 画面上の位置
+        self.pos_x = 20   # プレイヤー動き 変える 判定も
+        self.pos_y = 500
+        # キャラが右に進んだ距離
+        self.forward_len = 0 # 背景？
+        # ジャンプ中フラグ
+        self.is_jump = False
+        # ジャンプ距離
+        self.jump_len = 0
+        # 画面端にぶつかった時のフラグ
+        self.r_flag = False
+        self.l_flag = False
+        # 背景の位置
+        self.bg_pos = 0
+
+    # 移動処理    
+    def frame_process_img(self):
+        self.r_flag = False 
+        self.l_flag = False 
+        
+        # 右移動
+        if Game.on_rightkey():
+            self.l_flag = False               
+            if self.r_flag == False:
+                self.pos_x += 10
+                if self.pos_x >= (Game.WINDOW_SIZE[0]-75):
+                    self.pos_x = (Game.WINDOW_SIZE[0]-80)
+                    self.r_flag = True 
+                    self.l_flag = False  
+                else:
+                    self.forward_len += 5
+        # 左移動        
+        if Game.on_leftkey():
+            self.r_flag = False
+            if self.l_flag == False:
+                self.pos_x -= 10
+                if self.pos_x <= 15:
+                    self.pos_x = 20
+                    self.l_flag = True
+                    self.r_flag = False
+                else:
+                    self.forward_len -= 5
+
+        # ジャンプ 
+        if Game.on_spacekey() and not self.is_jump:
+            self.is_jump = True
+            self.jump_len = 0
+                
+        if self.is_jump:
+            if self.jump_len < 5:
+                self.pos_y -= 20
+            elif self.jump_len < 8:
+                self.pos_y -= 5
+            elif self.jump_len < 20:
+                self.pos_y += 7
+            else:
+                self.is_jump = False
+                self.pos_y = 450
+            # else: # 変更
+            #     self.apply_gravity()
+                
+            self.jump_len += 1
+
+        self.set_chara_animation()
+        
+    # 画面に描画        
+    def draw(self):
+        super().draw((self.pos_x, self.pos_y))
