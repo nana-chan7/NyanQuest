@@ -45,7 +45,8 @@ class Game:
     map_no = 1                  # マップ番号(初期値は１)
     bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
 
-    test_count = 0      # アニメーション番号
+    player_count = 0      # プレイヤーキャラアニメーション番号
+    enemy_count = 0       # エネミーキャラアニメーション番号
     
     # 雑多組
     # move_flag, r_flag, l_flag = False, False, False

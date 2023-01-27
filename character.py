@@ -13,25 +13,24 @@ class Character:
     # プレイヤーキャラアニメーション設定  
     def set_chara_animation(self, image_list):
         self.image_list = image_list
-        if Game.test_count >= 2:
-            Game.test_count = 0
-        self.image_no = Game.test_count
+        if Game.player_count >= 2:
+            Game.player_count = 0
+        self.image_no = Game.player_count
         if Game.on_rightkey():
             self.image_no 
         elif Game.on_leftkey():
             self.image_no += 2
         elif Game.on_spacekey():
-            self.image_no += 4
-            
+            self.image_no += 4     
         self.image = self.image_list[self.image_no]
         return self.image
     
     # エネミーキャラアニメーション設定  
     def set_enemy_animation(self, image_list):
         self.image_list = image_list
-        if Game.test_count >= 2:
-            Game.test_count = 0
-        self.image_no = Game.test_count
+        if Game.enemy_count >= 3:
+            Game.enemy_count = 0
+        self.image_no = Game.enemy_count
         # if Game.on_rightkey():
         #     self.image_no 
         # elif Game.on_leftkey():

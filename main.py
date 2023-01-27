@@ -138,7 +138,9 @@ def main():
         # マップ画面        
         elif Game.phase == Phase.MAP:
             if Game.count % 10 == 0:
-                Game.test_count += 1
+                Game.player_count += 1
+            if Game.count % 20 == 0:
+                Game.enemy_count += 1
             Game.surface.fill((128,224,235))
             # 背景のスライド    
             x = Game.forward_len % Game.SCREEN_WIDTH

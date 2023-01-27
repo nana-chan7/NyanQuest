@@ -22,7 +22,7 @@ class Enemy(pygame.sprite.Sprite,Character):
         
     def update(self, x_shift):
         self.rect.x += x_shift    
-        self.set_chara_animation(self.image_list)  
+        self.set_enemy_animation(self.image_list)  
     
 class Boss(pygame.sprite.Sprite,Character):
     def __init__(self,pos):
