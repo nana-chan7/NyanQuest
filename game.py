@@ -30,8 +30,8 @@ class Game:
     # プレイヤー(キャラクター)
     chara_no = 0        # キャラクターナンバー(初期値は０)
     # 全てのキャラリスト
-    # CHARACTER_LIST = ["chara_images/obake_neko.png","chara_images/robo_neko.png","chara_images/fue_neko.png",
-    #                     "chara_images/kotatu_neko.png","chara_images/natu_neko.png","chara_images/yume_neko.png"]         
+    CHARACTER_LIST1 = ["chara_images/obake_neko.png","chara_images/robo_neko.png","chara_images/fue_neko.png",
+                        "chara_images/kotatu_neko.png","chara_images/natu_neko.png","chara_images/yume_neko.png"]         
     CHARACTER_LIST = ["obake_neko","robo_neko","fue_neko"]
                       
                       
@@ -47,6 +47,9 @@ class Game:
 
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号
+    
+    # 音楽再生
+    music_flag = 0
     
     # 雑多組
     # move_flag, r_flag, l_flag = False, False, False

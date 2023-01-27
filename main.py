@@ -19,28 +19,6 @@ def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
 
-    
-# 基本描画処理   
-# def basic_draw(fill_no,img):
-#     Game.surface.fill(fill_no)
-    # if Game.phase == Phase.MAP:
-    #     # if Game.on_rightkey():
-    #     #     Game.forward_len += 5
-    #     # elif Game.on_leftkey():
-    #     #     Game.forward_len -= 5
-    #     if Game.on_rightkey():
-    #         if Game.player_pos >= 1050 or Game.r_flag:
-    #             Game.l_flag = True
-    #             Game.forward_len += 5
-    #     elif Game.on_leftkey():
-    #         if Game.player_pos <= 25 or Game.l_flag:
-    #             Game.r_flag = True
-    #             Game.forward_len -= 5
-    #     if Game.move_flag:
-    #         x = Game.forward_len % Game.SCREEN_WIDTH
-    #         Game.surface.blit(img, (-x, 0))
-    #         Game.surface.blit(img, (Game.SCREEN_WIDTH-x, 0))
-
 # ガチャ処理
 def neko_gacha():
     # メッセージ
@@ -59,7 +37,7 @@ def neko_gacha():
         if Game.on_enterkey():
             # アイテムを消費
             Game.item -= 10
-            obtain_cara = random.choices(Game.CHARACTER_LIST, weights=prob, k=PIC)
+            obtain_cara = random.choices(Game.CHARACTER_LIST1, weights=prob, k=PIC)
             Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
             # 手持ちに追加
             Game.my_chara_list.append(obtain_cara[0])
@@ -86,7 +64,28 @@ def neko_gacha():
             # Game.surface.blit(gacha_error_msg, (200,200))        
             if Game.on_return():
                 Game.phase = Phase.MAP     
-                  
+                
+# 音楽再生処理 (改造)
+def game_music():
+    if Game.music_flag == 0:        # タイトル画面の場合
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.load("music/1.wav") 
+        pygame.mixer.music.play(-1)
+    elif Game.music_flag == 1:      # ゲーム(フィールド)画面の場合
+        pygame.mixer.music.set_volume(0.6)
+        pygame.mixer.music.load("music/2.wav") 
+        pygame.mixer.music.play(-1) 
+    elif Game.music_flag == 2:       # マップ画面の場合
+        pygame.mixer.music.set_volume(1.0)
+        pygame.mixer.music.load("music/3.wav") 
+        pygame.mixer.music.play(-1) 
+    # elif Game.music_flag == 3:      # ゲームオーバー画面の場合
+    #     pygame.mixer.music.set_volume(0.5)
+    #     pygame.mixer.music.load("music/gameover_sound.wav") 
+    #     pygame.mixer.music.play(1)
+    elif Game.music_flag == 4: # 何もしない処理
+        pass
+    
 # メイン処理
 def main():
     # 画像読み込み
@@ -102,9 +101,11 @@ def main():
                        
     # ゲーム情報の初期化
     init_game_info() 
+    pygame.mixer.init()
 
     while True:
         Game.surface.fill((0,0,0))
+        game_music()    # 音楽再生
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
@@ -113,6 +114,7 @@ def main():
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
+            Game.music_flag = 4
             Game.surface.blit(title_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.START
@@ -130,13 +132,16 @@ def main():
             if Game.on_0key(): # 仮
                 Game.phase = Phase.MAP 
                 Game.move_flag = True 
+                Game.music_flag = 1
             elif Game.wait_count <= 0:
                 if Game.on_enterkey():
                     Game.phase = Phase.MAP 
                     Game.move_flag = True 
+                    Game.music_flag = 1
                   
         # マップ画面        
         elif Game.phase == Phase.MAP:
+            Game.music_flag = 4
             if Game.count % 10 == 0:
                 Game.player_count += 1
             if Game.count % 20 == 0:
@@ -150,11 +155,13 @@ def main():
             Game.field.run()  
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
+                Game.music_flag = 2
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
+            Game.music_flag = 4
             Game.surface.blit(gacha_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.GACHARESULT
@@ -170,6 +177,7 @@ def main():
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_enterkey():
                 Game.is_gameover = False
+                pygame.mixer.music.stop()
                 main()
 
         pygame.display.update()
