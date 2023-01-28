@@ -14,12 +14,12 @@ class Player(pygame.sprite.Sprite, Character):
         #                    pygame.image.load("chara_images/robo_neko.png"),
         #                     pygame.image.load("chara_images/yume_neko.png"))
         # 仮 確認用
-        self.all_image_list = (pygame.image.load("kariimage2/1.png"),
-                           pygame.image.load("kariimage2/2.png"),
-                           pygame.image.load("kariimage2/3.png"),
-                           pygame.image.load("kariimage2/4.png"),
-                           pygame.image.load("kariimage2/5.png"),
-                            pygame.image.load("kariimage2/6.png"))
+        self.all_image_list = (pygame.image.load("kari_img_list/1/1.png"),
+                           pygame.image.load("kari_img_list/1/2.png"),
+                           pygame.image.load("kari_img_list/1/3.png"),
+                           pygame.image.load("kari_img_list/1/4.png"),
+                           pygame.image.load("kari_img_list/1/5.png"),
+                            pygame.image.load("kari_img_list/1/6.png"))
         
         
         self.image = self.set_chara_animation(self.all_image_list)
