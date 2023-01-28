@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite, Character):
         #                    pygame.image.load("chara_images/obake_neko.png"),
         #                    pygame.image.load("chara_images/robo_neko.png"),
         #                     pygame.image.load("chara_images/yume_neko.png"))
-        # 仮 確認用
+        # キャラクター画像
         self.all_image_list = (pygame.image.load("kari_img_list/1/1.png"),
                            pygame.image.load("kari_img_list/1/2.png"),
                            pygame.image.load("kari_img_list/1/3.png"),

@@ -28,7 +28,7 @@ class Character:
     # エネミーキャラアニメーション設定  
     def set_enemy_animation(self, image_list):
         self.image_list = image_list
-        if Game.enemy_count >= 3:
+        if Game.enemy_count >= len(self.image_list):
             Game.enemy_count = 0
         self.image_no = Game.enemy_count
         # if Game.on_rightkey():
