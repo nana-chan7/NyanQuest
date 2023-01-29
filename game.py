@@ -25,15 +25,20 @@ class Game:
     gacha_error_flag = False    # ガチャ可能フラグ
     obtain_cara_img = None      # 排出したキャラ
     my_chara_list = []          # 所持キャラリスト ※重複したくない
+    gacha_count = 0
+    gacha = True
 
-    
     # プレイヤー(キャラクター)
     chara_no = 0        # キャラクターナンバー(初期値は０)
     # 全てのキャラリスト
-    CHARACTER_LIST1 = ["chara_images/obake_neko.png","chara_images/robo_neko.png","chara_images/fue_neko.png",
-                        "chara_images/kotatu_neko.png","chara_images/natu_neko.png","chara_images/yume_neko.png"]         
-    CHARACTER_LIST = ["obake_neko","robo_neko","fue_neko"]
-                      
+    # CHARACTER_LIST1 = ["chara_images/obake_neko.png","chara_images/robo_neko.png","chara_images/fue_neko.png",
+    #                     "chara_images/kotatu_neko.png","chara_images/natu_neko.png","chara_images/yume_neko.png"]         
+    # CHARACTER_LIST = ["obake_neko","robo_neko","fue_neko"]
+    
+    # キャラクター画像ダウンロード characters_image_list
+
+    chara_list = ["gacha_chara_image/0.png","gacha_chara_image/1.png","gacha_chara_image/2.png","gacha_chara_image/3.png"]
+
                       
     # プレイヤー処理関連
     jump_flag = False           # ジャンプ
@@ -116,7 +121,7 @@ class Game:
         return K_g in Game.keymap
     # 戻る
     @classmethod
-    def on_return(cls):
+    def on_returnkey(cls):
         return K_r in Game.keymap
     # 仮用
     @classmethod
@@ -136,7 +141,8 @@ class Game:
 class Phase(Enum):
     TITLE = 1           # タイトル画面
     START = 10          # スタート    
-    MAP = 15            # マップ (1,2,ボス)
+    MAP = 20            # マップ 
+    BOSS = 30
     
     GACHAGACHA = 50      # ガチャ画面
     GACHARESULT = 60      # ガチャ結果画面

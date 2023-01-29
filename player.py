@@ -7,19 +7,40 @@ class Player(pygame.sprite.Sprite, Character):
         super().__init__()
         # 
         # self.image = pygame.Surface((64,64))
-        # self.all_image_list = (pygame.image.load("chara_images/fue_neko.png"),
-        #                    pygame.image.load("chara_images/kotatu_neko.png"),
-        #                    pygame.image.load("chara_images/natu_neko.png"),
-        #                    pygame.image.load("chara_images/obake_neko.png"),
-        #                    pygame.image.load("chara_images/robo_neko.png"),
-        #                     pygame.image.load("chara_images/yume_neko.png"))
+        # self.list1 = (pygame.image.load("kari_img_list/0/1.png"),
+        #                 pygame.image.load("kari_img_list/0/2.png"),
+        #                 pygame.image.load("kari_img_list/0/3.png"),
+        #                 pygame.image.load("kari_img_list/0/4.png"),
+        #                 pygame.image.load("kari_img_list/0/5.png"),
+        #                 pygame.image.load("kari_img_list/0/6.png"))
+        # self.list2 = (pygame.image.load("kari_img_list/1/1.png"),
+        #                 pygame.image.load("kari_img_list/1/2.png"),
+        #                 pygame.image.load("kari_img_list/1/3.png"),
+        #                 pygame.image.load("kari_img_list/1/4.png"),
+        #                 pygame.image.load("kari_img_list/1/5.png"),
+        #                 pygame.image.load("kari_img_list/1/6.png"))
+        # self.list3 = (pygame.image.load("kari_img_list/2/1.png"),
+        #                 pygame.image.load("kari_img_list/2/2.png"),
+        #                 pygame.image.load("kari_img_list/2/3.png"),
+        #                 pygame.image.load("kari_img_list/2/4.png"),
+        #                 pygame.image.load("kari_img_list/2/5.png"),
+        #                 pygame.image.load("kari_img_list/2/6.png"))        
+        # self.list4 = (pygame.image.load("kari_img_list/3/1.png"),
+        #                 pygame.image.load("kari_img_list/3/2.png"),
+        #                 pygame.image.load("kari_img_list/3/3.png"),
+        #                 pygame.image.load("kari_img_list/3/4.png"),
+        #                 pygame.image.load("kari_img_list/3/5.png"),
+        #                 pygame.image.load("kari_img_list/3/6.png"))
+        
+        # self.chara_list = [self.list1, self.list2, self.list3, self.list4]
+        
         # キャラクター画像
-        self.all_image_list = (pygame.image.load("kari_img_list/1/1.png"),
-                           pygame.image.load("kari_img_list/1/2.png"),
-                           pygame.image.load("kari_img_list/1/3.png"),
-                           pygame.image.load("kari_img_list/1/4.png"),
-                           pygame.image.load("kari_img_list/1/5.png"),
-                            pygame.image.load("kari_img_list/1/6.png"))
+        self.all_image_list = (pygame.image.load("kari_img_list/3/1.png"),
+                           pygame.image.load("kari_img_list/3/2.png"),
+                           pygame.image.load("kari_img_list/3/3.png"),
+                           pygame.image.load("kari_img_list/3/4.png"),
+                           pygame.image.load("kari_img_list/3/5.png"),
+                            pygame.image.load("kari_img_list/3/6.png"))
         
         
         self.image = self.set_chara_animation(self.all_image_list)
