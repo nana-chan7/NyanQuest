@@ -160,8 +160,12 @@ def main():
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 Game.music_flag = 2
+            elif Game.boss_flag:
+                
+                
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
+        # ボスマップ画面
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -189,4 +193,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-         
+        
