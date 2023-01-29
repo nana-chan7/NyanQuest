@@ -1,4 +1,5 @@
 import pygame
+from game import Game
 
 # 1タイル
 class Tile(pygame.sprite.Sprite):
@@ -8,7 +9,9 @@ class Tile(pygame.sprite.Sprite):
         # self.image.fill((100,100,100))
         # self.rect = self.image.get_rect(topleft=pos)
         
-        self.image = pygame.image.load("images/pink_block.png")
+        self.image_list = (pygame.image.load("images/block2.png"),
+                        pygame.image.load("images/block1.png"))
+        self.image = self.image_list[Game.block_no]
         self.rect = self.image.get_rect(topleft=pos)
         
     def update(self, x_shift):

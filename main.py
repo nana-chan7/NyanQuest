@@ -94,6 +94,7 @@ def main():
     gacha_bg = pygame.image.load("bg_images/gacha_img.png")
     map1_bg = pygame.image.load("bg_images/map1_img.png")
     gameover_bg = pygame.image.load("bg_images/gameover_img.png")
+    key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
     
     # カウントダウン
     pygame.time.set_timer(pygame.USEREVENT, 1000)
@@ -151,8 +152,11 @@ def main():
             x = Game.forward_len % Game.SCREEN_WIDTH
             Game.surface.blit(map1_bg, (-x, 0))
             Game.surface.blit(map1_bg, (Game.SCREEN_WIDTH-x, 0))
-
-            Game.field.run()  
+            # マップ表示
+            Game.field.run()
+            # 操作方法表示
+            Game.surface.blit(key_menu_img,(1000,10))
+            
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 Game.music_flag = 2
