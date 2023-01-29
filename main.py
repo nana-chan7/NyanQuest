@@ -9,8 +9,10 @@ pygame.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
-# フォント
-# font = pygame.font.Font(sys, 55)
+font = pygame.font.Font("font/Ronde-B_square.otf", 55)       # フォント 
+
+gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
+gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
 Game.field = Filed(Filed.map1,Game.surface)
 
@@ -21,49 +23,35 @@ def init_game_info():
 
 # ガチャ処理
 def neko_gacha():
-    # メッセージ
-    # gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
     # 確率
-    prob = [0, 0.8, 0.6, 0.5, 0.3, 0.1] 
+    prob = [0.3, 0.8, 0.6, 0.5] 
     # ガチャ一回につき、一体排出
     PIC = 1
     obtain_cara = None
-    # 所持アイテムが10以下だったらフラグをTrue
+    # 所持アイテムが10以下だったら
     if Game.item < 10:
-        Game.gacha_error_flag = True
+        Game.gacha = False
+        # Game.gacha_error_flag = True
+        Game.surface.blit(gacha_error_msg, [15,300]) 
+        Game.gacha_count = 0
+         
     # 所持アイテムが10以上だったらガチャを回す
-    elif Game.item >= 10:
-        Game.gacha_error_flag = False
+    elif Game.item >= 10 and Game.gacha:
+        # Game.gacha_error_flag = False
         if Game.on_enterkey():
-            # アイテムを消費
-            Game.item -= 10
-            obtain_cara = random.choices(Game.CHARACTER_LIST1, weights=prob, k=PIC)
+            Game.gacha_count += 1
+            Game.gacha = False
+            Game.item -= 10     # アイテムを消費
+            obtain_cara = random.choices(Game.chara_list , weights=prob, k=PIC)
             Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
-            # 手持ちに追加
-            Game.my_chara_list.append(obtain_cara[0])
-            # 所持アイテムが10以下になったらフラグをTrue
-            if Game.item < 10:
-                Game.gacha_error_flag = True   
-    # アイテムが足りなくて、回せない場合            
-    if Game.gacha_error_flag:
-        # Game.surface.blit(gacha_error_msg, [0,300]) 
-        if Game.on_return():
-            Game.phase = Phase.MAP 
-    # ガチャを回した場合、結果を表示       
-    else:
-        Game.surface.blit(Game.obtain_cara_img,  (200,200))
-        # まだアイテムが１０以上残っていたら
-        if Game.item >= 10:
-            if Game.on_0key():
-                Game.gacha_error_flag = False
-                Game.phase = Phase.GACHAGACHA
-            elif Game.on_return():
-                Game.phase = Phase.MAP
-        # アイテム数が１０以下になったら ボタン表示も変えたい
-        else:
-            # Game.surface.blit(gacha_error_msg, (200,200))        
-            if Game.on_return():
-                Game.phase = Phase.MAP     
+            # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
+            Game.surface.blit(Game.obtain_cara_img, (350,200))      # 結果表示
+            
+            if Game.item >= 10 and Game.gacha_count >= 10000:
+                Game.surface.blit(gacha_msg, [15,300]) 
+                Game.gacha = True
+                    
+
                 
 # 音楽再生処理 (改造)
 def game_music():
@@ -161,11 +149,12 @@ def main():
                 Game.phase = Phase.GACHAGACHA
                 Game.music_flag = 2
             elif Game.boss_flag:
-                
-                
+                pass
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
         # ボスマップ画面
+        if Game.phase == Phase.BOSS:
+            pass
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -173,11 +162,15 @@ def main():
             Game.surface.blit(gacha_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.GACHARESULT
-                
+
         # ガチャ結果画面
         elif Game.phase == Phase.GACHARESULT:
             Game.surface.fill((200,100,100))
-            neko_gacha()   
+            neko_gacha()
+            # 戻るボタンを押したら、マップ画面へ戻る
+            if Game.on_returnkey():
+                Game.phase = Phase.MAP
+
             # video()
    
         # ゲームオーバー           
