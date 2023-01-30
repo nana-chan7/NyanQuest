@@ -47,11 +47,14 @@ class Game:
     star_x, star_y = 0, 0       
     
     # 画面等処理関連
-    map_no = 0                  # マップ番号(初期値は０)
+    map_no = 2                  # マップ番号(初期値は０)
     bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
+    # 仮 
+    r_flag, l_flag = True, False
     block_no = 0        # ブロック番号
     enemy_no = 0        # エネミーキャラ番号
     boss_flag = False   # ボスフラグ
+    
 
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号
@@ -64,11 +67,13 @@ class Game:
     direction_num = 0 # ディレクションのやつ
     forward_len = 0     # 背景？
     bg_pos = 0      # 背景の位置
-    player_pos = 0
+    player_pos = 0 ##
+    player = None
     enemy_x, enemy_y = 0, 0
     
     chara_image = None
     number = 0
+
     
 
 

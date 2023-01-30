@@ -14,7 +14,7 @@ font = pygame.font.Font("font/Ronde-B_square.otf", 55)       # フォント
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
-Game.field = Filed(Filed.map_list[Game.map_no],Game.surface)
+Game.field = Filed(Filed.map_list[Game.map_no])
 
 # ゲームの初期化処理
 def init_game_info():

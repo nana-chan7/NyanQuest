@@ -46,12 +46,6 @@ class Player(pygame.sprite.Sprite, Character):
         self.image = self.set_chara_animation(self.all_image_list)
         self.rect = self.image.get_rect(topleft=pos)
         
-        # プレイヤーの動き
-        self.gravity = 0.8 #0.8
-        
-        self.screen_pos = 0
-        self.now_rect = 0
-        
         self.player_attack_img = pygame.image.load("images/attack_star.png")
         self.count = 0
         
@@ -71,29 +65,31 @@ class Player(pygame.sprite.Sprite, Character):
         
         # 右移動
         if Game.on_rightkey():
-            Game.bg_stop_l = False
+            Game.r_flag = True
+            Game.l_flag = False
             Game.direction_num = 1
             self.rect.x += 8 
-            if self.rect.x >= Game.SCREEN_WIDTH-20:
-                self.rect.x = Game.SCREEN_WIDTH-20
-                Game.bg_stop_r = True
+            if self.rect.x >= Game.SCREEN_WIDTH-50:
+                self.rect.x = Game.SCREEN_WIDTH-50
+                # Game.bg_stop_r = True
             if Game.field.movement_collision():
                 self.rect.x -= 10
-            if Game.bg_stop_r:
-                Game.forward_len = 0
+            # if Game.bg_stop_r:
+            #     Game.forward_len = 0
             
         # 左移動
         if Game.on_leftkey():
-            Game.bg_stop_r = False
+            Game.r_flag = False
+            Game.l_flag = True
             if self.rect.x <= 20:
                 self.rect.x = 20
-                Game.bg_stop_l = True
+                # Game.bg_stop_l = True
             Game.direction_num = -1
             self.rect.x -= 8 
             if Game.field.movement_collision():
                 self.rect.x += 10
-            if Game.bg_stop_l:
-                Game.forward_len -= 2
+            # if Game.bg_stop_l:
+            #     Game.forward_len -= 2
                     
         # ジャンプ
         if self.landing and Game.on_spacekey():  
