@@ -64,28 +64,32 @@ class Player(pygame.sprite.Sprite, Character):
         Game.collided_flag = False
         
         # 右移動
-        if Game.on_rightkey():
-            Game.r_flag = True
-            Game.l_flag = False
+        if Game.on_rightkey() and Game.move_flag:
             Game.direction_num = 1
-            self.rect.x += 8 
-            if self.rect.x >= Game.SCREEN_WIDTH-50:
-                self.rect.x = Game.SCREEN_WIDTH-50
-                # Game.bg_stop_r = True
+            self.rect.x += 8
+                # Game.r_flag = False
+            # if self.rect.x >= Game.SCREEN_WIDTH-100:
+            #     self.rect.x -= 8
+            #     Game.r_scroll = True
+            #     # Game.bg_stop_r = True
+            if self.rect.x <= 10:
+                Game.move_flag = False
             if Game.field.movement_collision():
                 self.rect.x -= 10
             # if Game.bg_stop_r:
             #     Game.forward_len = 0
             
         # 左移動
-        if Game.on_leftkey():
-            Game.r_flag = False
-            Game.l_flag = True
-            if self.rect.x <= 20:
-                self.rect.x = 20
+        if Game.on_leftkey() and Game.move_flag:
+            # Game.l_flag = True
+            # Game.r_scroll = False
+            # if self.rect.x <= 20:
+            #     self.rect.x = 20
                 # Game.bg_stop_l = True
             Game.direction_num = -1
             self.rect.x -= 8 
+            if self.rect.x <= Game.SCREEN_WIDTH -10:
+                Game.move_flag = False
             if Game.field.movement_collision():
                 self.rect.x += 10
             # if Game.bg_stop_l:

@@ -50,7 +50,9 @@ class Game:
     map_no = 2                  # マップ番号(初期値は０)
     bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
     # 仮 
-    r_flag, l_flag = True, False
+    r_flag, l_flag = False, False
+    r_scroll, l_scroll = False, False
+    move_flag = True
     block_no = 0        # ブロック番号
     enemy_no = 0        # エネミーキャラ番号
     boss_flag = False   # ボスフラグ
