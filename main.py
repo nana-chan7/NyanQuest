@@ -4,7 +4,6 @@ from pygame.locals import *
 from game import Game, Phase
 from filed import Filed
 
-# 基本処理
 pygame.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
@@ -130,6 +129,7 @@ def main():
                   
         # マップ画面        
         elif Game.phase == Phase.MAP:
+            Game.r_flag = True
             Game.music_flag = 4
             if Game.count % 10 == 0:
                 Game.player_count += 1

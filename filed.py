@@ -70,13 +70,16 @@ class Filed:
         player = self.player.sprite
         player_x = player.rect.x
         # direction_x = Game.direction_num
-        if player_x < 20 and Game.l_flag: 
+        if player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0:
             self.world_shift = 8
-        elif player_x+20 > 1000 and Game.r_flag:
+            Game.move_flag = False
+        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0:
             self.world_shift = -8
+            Game.move_flag = False
         else:
             self.world_shift = 0
-    
+            Game.move_flag = True
+            
     # プレイヤーとブロックの当たり判定        
     def movement_collision(self):
         player = self.player.sprite
