@@ -47,9 +47,10 @@ class Game:
     star_x, star_y = 0, 0       
     
     # 画面等処理関連
-    map_no = 1                  # マップ番号(初期値は１)
+    map_no = 0                  # マップ番号(初期値は０)
     bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
     block_no = 0        # ブロック番号
+    enemy_no = 0        # エネミーキャラ番号
     boss_flag = False   # ボスフラグ
 
     player_count = 0      # プレイヤーキャラアニメーション番号

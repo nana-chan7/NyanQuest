@@ -31,12 +31,6 @@ class Character:
         if Game.enemy_count >= len(self.image_list):
             Game.enemy_count = 0
         self.image_no = Game.enemy_count
-        # if Game.on_rightkey():
-        #     self.image_no 
-        # elif Game.on_leftkey():
-        #     self.image_no += 2
-        # elif Game.on_spacekey():
-        #     self.image_no += 4
             
         self.image = self.image_list[self.image_no]
         return self.image

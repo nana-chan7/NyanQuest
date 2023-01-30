@@ -6,7 +6,6 @@ from player import Player
 class Enemy(pygame.sprite.Sprite,Character):
     def __init__(self, pos, size):
         super().__init__()
-        # self.image = pygame.Surface((size,size))
         self.enemy1_list = (pygame.image.load("enemy_images/1/1.png"),
                             pygame.image.load("enemy_images/1/2.png"),
                             pygame.image.load("enemy_images/1/3.png"))
@@ -17,7 +16,7 @@ class Enemy(pygame.sprite.Sprite,Character):
         
         self.all_image_list = [self.enemy1_list, self.enemy2_list]
         
-        self.image = self.set_enemy_animation(self.all_image_list[0])
+        self.image = self.set_enemy_animation(self.all_image_list[Game.enemy_no])
         self.rect = self.image.get_rect(topleft=pos)
         Game.enemy_x, Game.enemy_y = self.rect.x, self.rect.y
 

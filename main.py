@@ -14,7 +14,7 @@ font = pygame.font.Font("font/Ronde-B_square.otf", 55)       # フォント
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
-Game.field = Filed(Filed.map1,Game.surface)
+Game.field = Filed(Filed.map_list[Game.map_no],Game.surface)
 
 # ゲームの初期化処理
 def init_game_info():
@@ -67,10 +67,10 @@ def game_music():
         pygame.mixer.music.set_volume(1.0)
         pygame.mixer.music.load("music/3.wav") 
         pygame.mixer.music.play(-1) 
-    # elif Game.music_flag == 3:      # ゲームオーバー画面の場合
-    #     pygame.mixer.music.set_volume(0.5)
-    #     pygame.mixer.music.load("music/gameover_sound.wav") 
-    #     pygame.mixer.music.play(1)
+    elif Game.music_flag == 3:      # ゲームオーバー画面の場合
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.load("music/1.wav") 
+        pygame.mixer.music.play(-1)
     elif Game.music_flag == 4: # 何もしない処理
         pass
     
@@ -94,7 +94,7 @@ def main():
 
     while True:
         Game.surface.fill((0,0,0))
-        game_music()    # 音楽再生
+        # game_music()    # 音楽再生
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
@@ -166,7 +166,7 @@ def main():
         # ガチャ結果画面
         elif Game.phase == Phase.GACHARESULT:
             Game.surface.fill((200,100,100))
-            neko_gacha()
+            # neko_gacha()
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.phase = Phase.MAP
@@ -175,6 +175,7 @@ def main():
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
+            Game.music_flag = 4
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_enterkey():
                 Game.is_gameover = False
