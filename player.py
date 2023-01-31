@@ -62,6 +62,7 @@ class Player(pygame.sprite.Sprite, Character):
         self.count += 1
         self.now_rect = self.rect
         Game.collided_flag = False
+        Game.move_flag = True
         
         # 右移動
         if Game.on_rightkey() and Game.move_flag:

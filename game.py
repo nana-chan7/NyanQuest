@@ -47,7 +47,7 @@ class Game:
     star_x, star_y = 0, 0       
     
     # 画面等処理関連
-    map_no = 2                  # マップ番号(初期値は０)
+    map_no = 0                  # マップ番号(初期値は０)
     bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
     # 仮 
     r_flag, l_flag = False, False
@@ -75,6 +75,7 @@ class Game:
     
     chara_image = None
     number = 0
+    start = False
 
     
 

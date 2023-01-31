@@ -9,9 +9,12 @@ class Tile(pygame.sprite.Sprite):
                         pygame.image.load("images/block1.png"),
                         pygame.image.load("images/block2.png"),
                         pygame.image.load("images/grass_block.png"))
+        
         self.image = self.image_list[Game.block_no]
         self.rect = self.image.get_rect(topleft=pos)
         
     def update(self, x_shift):
         self.rect.x += x_shift
+        if x_shift >= 1100:
+            x_shift = 1100
                

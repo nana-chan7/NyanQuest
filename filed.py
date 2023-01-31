@@ -69,13 +69,16 @@ class Filed:
     def scroll_x(self):
         player = self.player.sprite
         player_x = player.rect.x
+        print(player_x)
         # direction_x = Game.direction_num
         if player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0:
-            self.world_shift = 8
-            Game.move_flag = False
-        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0:
             self.world_shift = -8
-            Game.move_flag = False
+
+        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0:
+            self.world_shift = 8
+            
+        if 1100 >= player_x <= 30:
+                Game.move_flag = True              
         else:
             self.world_shift = 0
             Game.move_flag = True
@@ -106,15 +109,15 @@ class Filed:
     def run(self):
         # self.bg_move()
         
+        # プレイヤー
+        self.player.update()
+        self.player.draw(Game.surface)  
+        
         # ブロック(タイル)
         self.tiles.update(self.world_shift)
         self.tiles.draw(Game.surface)
         self.scroll_x() 
         self.re_start()
-        
-        # プレイヤー
-        self.player.update()
-        self.player.draw(Game.surface)  
         
         # 敵
         self.enemy.update(self.world_shift)
@@ -161,7 +164,20 @@ class Filed:
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
     
-    map_list = [map1, map2, map3]
+    map = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1],
+    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
+
+    map_list = [map]
 
     # map = (
     # (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
