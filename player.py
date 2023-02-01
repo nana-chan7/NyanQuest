@@ -7,11 +7,13 @@ class Player(pygame.sprite.Sprite, Character):
         super().__init__()
         # プレイヤーキャラ画像
         a_1 = pygame.image.load("chara_images/3/1.png")
-        a_1 = pygame.image.load("chara_images/3/1.png")
-        a_1 = pygame.image.load("chara_images/3/1.png")
-        a_1 = pygame.image.load("chara_images/3/1.png")
-        a_1 = pygame.image.load("chara_images/3/1.png")
-        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_2 = pygame.image.load("chara_images/3/1.png")
+        a_3 = pygame.transform.flip(a_1, 1, 0)
+        a_4 = pygame.transform.flip(a_2, 1, 0)
+        a_5 = pygame.image.load("chara_images/3/1.png")
+        a_6 = pygame.image.load("chara_images/3/1.png")
+        a_7 = pygame.transform.flip(a_4, 1, 0)
+        a_8 = pygame.transform.flip(a_5, 1, 0)
 
         # 
         # self.image = pygame.Surface((64,64))

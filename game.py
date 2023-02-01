@@ -61,9 +61,6 @@ class Game:
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号
     
-    # 音楽再生
-    music_flag = 0
-    
     # 雑多組
     # move_flag, r_flag, l_flag = False, False, False
     direction_num = 0 # ディレクションのやつ

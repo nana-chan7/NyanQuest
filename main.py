@@ -90,11 +90,9 @@ def main():
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
-            # Game.music_flag = 4
             m1.play(-1)
             Game.surface.blit(title_bg,(0,0))
             if Game.on_enterkey():
-                m1.stop()
                 Game.phase = Phase.START
 
         # スタート画面
@@ -110,17 +108,17 @@ def main():
             if Game.on_0key(): # 仮
                 Game.phase = Phase.MAP 
                 Game.move_flag = True 
-                # Game.music_flag = 1
+                m1.stop()
             elif Game.wait_count <= 0:
                 if Game.on_enterkey():
                     Game.phase = Phase.MAP 
-                    Game.move_flag = True 
-                    # Game.music_flag = 1
-
+                    Game.move_flag = True
+                    m1.stop()
+                    
         # マップ画面        
         elif Game.phase == Phase.MAP:
-            Game.r_flag = True
-            # Game.music_flag = 4
+            m2.play(-1)
+            # Game.r_flag = True
             if Game.count % 10 == 0:
                 Game.player_count += 1
             if Game.count % 20 == 0:
@@ -138,18 +136,19 @@ def main():
             
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
-                # Game.music_flag = 2
+                m2.stop()
             elif Game.boss_flag:
                 pass
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
+                m2.stop()
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
             pass
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
-            # Game.music_flag = 4
+            m3.play(-1)
             Game.surface.blit(gacha_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.GACHARESULT
@@ -161,12 +160,12 @@ def main():
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.phase = Phase.MAP
+                m3.stop()
 
             # video()
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
-            # Game.music_flag = 4
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_enterkey():
                 Game.is_gameover = False

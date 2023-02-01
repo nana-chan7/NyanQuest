@@ -22,6 +22,7 @@ class Filed:
        self.player = pygame.sprite.GroupSingle()
        self.enemy = pygame.sprite.Group()
        self.boss = pygame.sprite.Group()
+
        
        for row_index, row in enumerate(layout):
            for col_index, cell in enumerate(row):
@@ -56,13 +57,11 @@ class Filed:
                 if cell == 6:
                     enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.enemy.add(enemy_sprite)
-                    f = pygame.sprite.spritecollide(player_sprite, self.tiles.sprites(), False)
-                    if len(f) != 0:
-                        Game.item += 10
                         
                 if cell == 7:
                     enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.enemy.add(enemy_sprite)
+
                 # ボスキャラ
                 # if cell == 8:
                 #     boss_sprite = Boss((x,y),Game.TILE_SIZE)
