@@ -37,7 +37,7 @@ class Game:
     
     # キャラクター画像ダウンロード characters_image_list
 
-    chara_list = ["gacha_chara_image/0.png","gacha_chara_image/1.png","gacha_chara_image/2.png","gacha_chara_image/3.png"]
+    chara_list = ["chara_images/gacha/0.png","chara_images/gacha/1.png","chara_images/gacha/2.png","chara_images/gacha/3.png"]
 
                       
     # プレイヤー処理関連
@@ -59,7 +59,7 @@ class Game:
     
 
     player_count = 0      # プレイヤーキャラアニメーション番号
-    enemy_count = 0       # エネミーキャラアニメーション番号
+    enemy_count = 0       # エネミーキャラアニメーション番号x 
     
     # 雑多組
     # move_flag, r_flag, l_flag = False, False, False
@@ -73,6 +73,7 @@ class Game:
     chara_image = None
     number = 0
     start = False
+    command_able =True
 
     
 
@@ -93,12 +94,9 @@ class Game:
             elif event.type == KEYUP:
                 Game.keymap.remove(event.key)
                 
-            # elif event.type == MOUSEBUTTONDOWN:
-            #     Game.mouse_x, Game.mouse_y = event.pos 
-                
 
     # キーチェック処理
-    @classmethod
+    # @classmethod
     # def on_upkey(cls):
     #     return K_UP in Game.keymap
     # @classmethod
@@ -113,9 +111,22 @@ class Game:
     @classmethod
     def on_spacekey(cls):
         return K_SPACE in Game.keymap
+    # @classmethod
+    # def on_enterkey(cls):
+    #     return K_RETURN in Game.keymap
+    
     @classmethod
     def on_enterkey(cls):
-        return K_RETURN in Game.keymap
+        if Game.command_able:
+            if (K_RETURN in Game.keymap):
+                Game.command_able = False
+                return True
+            else:
+                return False
+        else:
+            if not (K_RETURN in Game.keymap):
+                Game.command_able = True   
+        return False    
 
     # # メニュー
     # @classmethod        
@@ -137,11 +148,14 @@ class Game:
     @classmethod
     def on_9key(cls):
         return K_9 in Game.keymap
-    # 攻撃 仮
+    # 攻撃 右方向
     @classmethod
-    def on_skey(cls):
-        return K_s in Game.keymap
-
+    def on_ckey(cls):
+        return K_c in Game.keymap
+    # 攻撃 左方向
+    @classmethod
+    def on_xkey(cls):
+        return K_x in Game.keymap
     
 # 段階処理
 class Phase(Enum):

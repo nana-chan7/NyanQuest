@@ -2,7 +2,7 @@ import pygame
 from tiles import Tile
 from player import Player
 from enemy import Enemy, Boss
-from game import Game
+from game import Game, Phase
 
 class Filed:
     def __init__(self,level_data): 
@@ -46,6 +46,12 @@ class Filed:
                 if cell == 4:
                     tile = Tile((x,y),Game.TILE_SIZE)
                     self.tiles.add(tile)
+                # ドア マップ遷移用
+                if cell == 5:
+                    tile = Tile((x,y),Game.TILE_SIZE) 
+                    self.tiles.add(tile)
+                    self.tile_rect = tile
+                    
                     
                 # プレイヤー
                 if cell == 9:
@@ -72,17 +78,14 @@ class Filed:
     def scroll_x(self):
         player = self.player.sprite
         player_x = player.rect.x
-        print(player.on_right_key)
-        
-        # direction_x = Game.direction_num
-        if player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0 and player.on_left_key:
-            self.world_shift = 8
+        self.world_shift = 0
+
+        if player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0 and player.move_dx != 0:
+            self.world_shift = -player.move_dx
+            Game.move_flag = False         
+        elif player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0 and player.on_left_key:
+            self.world_shift = player.move_dx
             Game.move_flag = False
-        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0 and player.on_right_key:
-            self.world_shift = -8
-            Game.move_flag = False
-        # if 1100 >= player_x <= 30:
-        #         Game.move_flag = True              
         else:
             self.world_shift = 0
             Game.move_flag = True
@@ -93,6 +96,10 @@ class Filed:
         flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
         if len(flag) != 0:
             return True
+        
+        if self.tile_rect.rect.x <= player.rect.x:
+            if self.tile_rect.rect.y <= player.rect.y:
+                Game.phase == Phase.BOSS
         
     # リスタート時
     def re_start(self):
@@ -119,7 +126,24 @@ class Filed:
         self.player.draw(Game.surface)  
         
         # ブロック(タイル)
-        self.tiles.update(self.world_shift)
+        if self.world_shift < 0:
+            for i in range(-self.world_shift):
+                self.tiles.update(-1)
+                if self.movement_collision():
+                    self.tiles.update(1)
+                    break
+                else:
+                    self.player.sprite.rect.x -= 1
+        elif self.world_shift > 0:
+            for e in range(self.world_shift):
+                self.tiles.update(1)
+                if self.movement_collision():
+                    self.tiles.update(-1)
+                    break
+                else:
+                    self.player.sprite.rect.x += 1
+                    
+                    
         self.tiles.draw(Game.surface)
         self.scroll_x() 
         self.re_start()
@@ -131,17 +155,32 @@ class Filed:
 
     # マップ(仮)
     map1 = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [0,0,0,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [2,2,0,0,0,0,0,1,2,1,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,3,0,0,2,2,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,3],
-    [0,0,0,0,0,2,2,3,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3],
-    [6,0,2,2,0,0,0,3,6,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,1,1,0,0,3],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,2,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,2,0,0,0,0,0,1,2,1,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5],
+    [1,0,0,0,0,0,0,3,0,0,2,2,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,2,2,3,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,3,3],
+    [1,0,2,2,0,0,0,3,6,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,1,1,3,0,3],
     [3,3,0,0,0,0,0,3,2,1,1,1,1,1,2,0,1,1,1,2,2,3,0,1,2,3,3,0,2,3]]
+
+    map2 = [
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,9,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,3,0,0,2,2,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,3],
+    [1,0,0,0,0,2,2,3,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3],
+    [1,0,2,2,0,0,0,3,6,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,1,1,0,0,3],
+    [3,3,0,0,0,0,0,3,2,1,1,1,1,1,2,0,1,1,1,2,2,3,0,1,2,3,3,0,2,3]]
+
+
 
     map2 = (
     (1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3),
@@ -182,7 +221,7 @@ class Filed:
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
-    map_list = [map1]
+    map_list = [map1,map2]
 
     # map = (
     # (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),

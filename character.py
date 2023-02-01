@@ -2,7 +2,7 @@ from game import Game
 
 # キャラクターのアニメーションクラス
 class Character:
-    def __init__(self, image_list):
+    def __init__(self):
         # 画像リスト
         # self.image_list = image_list
         self.image = None
@@ -21,7 +21,9 @@ class Character:
         elif Game.on_leftkey():
             self.image_no += 2
         elif Game.on_spacekey():
-            self.image_no += 4     
+            self.image_no += 4
+
+
         self.image = self.image_list[self.image_no]
         return self.image
     

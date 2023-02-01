@@ -4,54 +4,20 @@ from character import Character
 
 class Player(pygame.sprite.Sprite, Character):
     def __init__(self,pos):
-        super().__init__()
         # プレイヤーキャラ画像
         a_1 = pygame.image.load("chara_images/3/1.png")
-        a_2 = pygame.image.load("chara_images/3/1.png")
+        a_2 = pygame.image.load("chara_images/3/2.png")
         a_3 = pygame.transform.flip(a_1, 1, 0)
         a_4 = pygame.transform.flip(a_2, 1, 0)
-        a_5 = pygame.image.load("chara_images/3/1.png")
-        a_6 = pygame.image.load("chara_images/3/1.png")
-        a_7 = pygame.transform.flip(a_4, 1, 0)
-        a_8 = pygame.transform.flip(a_5, 1, 0)
+        a_5 = pygame.image.load("chara_images/3/5.png")
+        a_6 = pygame.image.load("chara_images/3/6.png")
 
-        # 
-        # self.image = pygame.Surface((64,64))
-        # self.list1 = (pygame.image.load("kari_img_list/0/1.png"),
-        #                 pygame.image.load("kari_img_list/0/2.png"),
-        #                 pygame.image.load("kari_img_list/0/3.png"),
-        #                 pygame.image.load("kari_img_list/0/4.png"),
-        #                 pygame.image.load("kari_img_list/0/5.png"),
-        #                 pygame.image.load("kari_img_list/0/6.png"))
-        # self.list2 = (pygame.image.load("kari_img_list/1/1.png"),
-        #                 pygame.image.load("kari_img_list/1/2.png"),
-        #                 pygame.image.load("kari_img_list/1/3.png"),
-        #                 pygame.image.load("kari_img_list/1/4.png"),
-        #                 pygame.image.load("kari_img_list/1/5.png"),
-        #                 pygame.image.load("kari_img_list/1/6.png"))
-        # self.list3 = (pygame.image.load("kari_img_list/2/1.png"),
-        #                 pygame.image.load("kari_img_list/2/2.png"),
-        #                 pygame.image.load("kari_img_list/2/3.png"),
-        #                 pygame.image.load("kari_img_list/2/4.png"),
-        #                 pygame.image.load("kari_img_list/2/5.png"),
-        #                 pygame.image.load("kari_img_list/2/6.png"))        
-        # self.list4 = (pygame.image.load("kari_img_list/3/1.png"),
-        #                 pygame.image.load("kari_img_list/3/2.png"),
-        #                 pygame.image.load("kari_img_list/3/3.png"),
-        #                 pygame.image.load("kari_img_list/3/4.png"),
-        #                 pygame.image.load("kari_img_list/3/5.png"),
-        #                 pygame.image.load("kari_img_list/3/6.png"))
-        
+
+        super().__init__()
         # self.chara_list = [self.list1, self.list2, self.list3, self.list4]
         
         # キャラクター画像
-        self.all_image_list = (pygame.image.load("chara_images/3/1.png"),
-                           pygame.image.load("chara_images/3/2.png"),
-                           pygame.image.load("chara_images/3/3.png"),
-                           pygame.image.load("chara_images/3/4.png"),
-                           pygame.image.load("chara_images/3/5.png"),
-                            pygame.image.load("chara_images/3/6.png"))
-        
+        self.all_image_list = [a_1, a_2, a_3, a_4, a_5, a_6]
         
         self.image = self.set_chara_animation(self.all_image_list)
         self.rect = self.image.get_rect(topleft=pos)
@@ -64,6 +30,7 @@ class Player(pygame.sprite.Sprite, Character):
         
         self.on_right_key = False
         self.on_left_key = False
+        self.move_dx = 0
     
     # キャラクターによって画像リストの差し替え
     def change_image_list(self):
@@ -76,40 +43,30 @@ class Player(pygame.sprite.Sprite, Character):
         self.now_rect = self.rect
         # Game.collided_flag = False
         Game.move_flag = True
-        
+        self.move_dx = 0
+        self.x_before = self.rect.x
         # 右移動
         if Game.on_rightkey():
-            self.on_right_key = True
             if Game.move_flag:
                 Game.direction_num = 1
-                self.rect.x += 8
-                Game.r_flag = False
-                if self.rect.x >= Game.SCREEN_WIDTH-100:
-                    self.rect.x -= 8
-                    Game.r_scroll = True
-                if self.rect.x <= 10:
-                    Game.move_flag = False
-            if Game.field.movement_collision():
-                self.rect.x -= 10
-                # if Game.bg_stop_r:
-                #     Game.forward_len = 0
+            for _ in range(8):
+                self.rect.x += 1
+                if Game.field.movement_collision():
+                    self.rect.x -= 1
+                    break
+                self.move_dx = self.rect.x - self.x_before
         else:
             self.on_right_key = False
-            
         # 左移動
         if Game.on_leftkey():
-            self.on_left_key = True
             if Game.move_flag:
                 Game.direction_num = -1
-                if self.rect.x <= 20:
-                    Game.direction_num = -1
-                    self.rect.x -= 8 
-                if self.rect.x <= Game.SCREEN_WIDTH -10:
-                    Game.move_flag = False
-            if Game.field.movement_collision():
-                self.rect.x += 10
-                # if Game.bg_stop_l:
-                #     Game.forward_len -= 2
+            for _ in range(8):
+                self.rect.x -= 1
+                if Game.field.movement_collision():
+                    self.rect.x += 1
+                    break
+                self.move_dx = self.rect.x + self.x_before
         else:
             self.on_left_key = False
             
@@ -156,28 +113,24 @@ class Player(pygame.sprite.Sprite, Character):
         
     # 攻撃処理              
     def player_attack(self):
-        Game.star_x, Game.star_y = self.rect.x, self.rect.y
-        if Game.on_skey(): 
-            Game.p_attack_flag = True
-        
-        if Game.p_attack_flag:
-            self.count += 20
-            Game.surface.blit(self.player_attack_img,(Game.star_x+self.count, Game.star_y))
-        if Game.star_x+self.count >= Game.SCREEN_WIDTH:
-            self.count = 0
-            Game.star_x, Game.star_y = self.rect.x, self.rect.y
-            Game.p_attack_flag = False
+        r_atack_x, r_atack_y = self.rect.x + 70, self.rect.y + 10
+        l_atack_x, l_atack_y = self.rect.x-30, self.rect.y+10
+        if Game.on_ckey(): 
+            Game.surface.blit(self.player_attack_img,(r_atack_x, r_atack_y))
+        elif Game.on_xkey(): 
+            Game.surface.blit(self.player_attack_img,(l_atack_x, l_atack_y))
         
     # リスタート処理      
     def re_start(self):
         if Game.is_gameover:
-            self.rect.x, self.rect.y = 30, 30      
+            self.rect.x, self.rect.y = 100, 30      
     
     # 更新処理            
     def update(self):
-        self.player_attack()
         self.get_input()
         self.re_start() 
         self.set_chara_animation(self.image_list)
+        self.player_attack()
+
         
     
