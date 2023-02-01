@@ -56,6 +56,10 @@ class Filed:
                 if cell == 6:
                     enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.enemy.add(enemy_sprite)
+                    f = pygame.sprite.spritecollide(player_sprite, self.tiles.sprites(), False)
+                    if len(f) != 0:
+                        Game.item += 10
+                        
                 if cell == 7:
                     enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.enemy.add(enemy_sprite)
@@ -69,16 +73,17 @@ class Filed:
     def scroll_x(self):
         player = self.player.sprite
         player_x = player.rect.x
-        print(player_x)
+        print(player.on_right_key)
+        
         # direction_x = Game.direction_num
-        if player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0:
-            self.world_shift = -8
-
-        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0:
+        if player_x < Game.SCREEN_WIDTH / 4 and Game.direction_num < 0 and player.on_left_key:
             self.world_shift = 8
-            
-        if 1100 >= player_x <= 30:
-                Game.move_flag = True              
+            Game.move_flag = False
+        elif player_x > Game.SCREEN_WIDTH - (Game.SCREEN_WIDTH / 4) and Game.direction_num > 0 and player.on_right_key:
+            self.world_shift = -8
+            Game.move_flag = False
+        # if 1100 >= player_x <= 30:
+        #         Game.move_flag = True              
         else:
             self.world_shift = 0
             Game.move_flag = True
@@ -89,6 +94,7 @@ class Filed:
         flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
         if len(flag) != 0:
             return True
+        
     # リスタート時
     def re_start(self):
         if Game.is_gameover:
@@ -160,24 +166,24 @@ class Filed:
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
     
     map = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,1],
-    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,0],
+    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
-    map_list = [map]
+    map_list = [map1]
 
     # map = (
     # (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),

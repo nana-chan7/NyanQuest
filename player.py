@@ -5,6 +5,14 @@ from character import Character
 class Player(pygame.sprite.Sprite, Character):
     def __init__(self,pos):
         super().__init__()
+        # プレイヤーキャラ画像
+        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_1 = pygame.image.load("chara_images/3/1.png")
+        a_1 = pygame.image.load("chara_images/3/1.png")
+
         # 
         # self.image = pygame.Surface((64,64))
         # self.list1 = (pygame.image.load("kari_img_list/0/1.png"),
@@ -35,12 +43,12 @@ class Player(pygame.sprite.Sprite, Character):
         # self.chara_list = [self.list1, self.list2, self.list3, self.list4]
         
         # キャラクター画像
-        self.all_image_list = (pygame.image.load("kari_img_list/3/1.png"),
-                           pygame.image.load("kari_img_list/3/2.png"),
-                           pygame.image.load("kari_img_list/3/3.png"),
-                           pygame.image.load("kari_img_list/3/4.png"),
-                           pygame.image.load("kari_img_list/3/5.png"),
-                            pygame.image.load("kari_img_list/3/6.png"))
+        self.all_image_list = (pygame.image.load("chara_images/3/1.png"),
+                           pygame.image.load("chara_images/3/2.png"),
+                           pygame.image.load("chara_images/3/3.png"),
+                           pygame.image.load("chara_images/3/4.png"),
+                           pygame.image.load("chara_images/3/5.png"),
+                            pygame.image.load("chara_images/3/6.png"))
         
         
         self.image = self.set_chara_animation(self.all_image_list)
@@ -51,6 +59,9 @@ class Player(pygame.sprite.Sprite, Character):
         
         self.jump_coount = 0    # ジャンプカウンタ
         self.landing = True     # 着地判定
+        
+        self.on_right_key = False
+        self.on_left_key = False
     
     # キャラクターによって画像リストの差し替え
     def change_image_list(self):
@@ -61,41 +72,45 @@ class Player(pygame.sprite.Sprite, Character):
     def get_input(self):
         self.count += 1
         self.now_rect = self.rect
-        Game.collided_flag = False
+        # Game.collided_flag = False
         Game.move_flag = True
         
         # 右移動
-        if Game.on_rightkey() and Game.move_flag:
-            Game.direction_num = 1
-            self.rect.x += 8
-                # Game.r_flag = False
-            # if self.rect.x >= Game.SCREEN_WIDTH-100:
-            #     self.rect.x -= 8
-            #     Game.r_scroll = True
-            #     # Game.bg_stop_r = True
-            if self.rect.x <= 10:
-                Game.move_flag = False
+        if Game.on_rightkey():
+            self.on_right_key = True
+            if Game.move_flag:
+                Game.direction_num = 1
+                self.rect.x += 8
+                Game.r_flag = False
+                if self.rect.x >= Game.SCREEN_WIDTH-100:
+                    self.rect.x -= 8
+                    Game.r_scroll = True
+                if self.rect.x <= 10:
+                    Game.move_flag = False
             if Game.field.movement_collision():
                 self.rect.x -= 10
-            # if Game.bg_stop_r:
-            #     Game.forward_len = 0
+                # if Game.bg_stop_r:
+                #     Game.forward_len = 0
+        else:
+            self.on_right_key = False
             
         # 左移動
-        if Game.on_leftkey() and Game.move_flag:
-            # Game.l_flag = True
-            # Game.r_scroll = False
-            # if self.rect.x <= 20:
-            #     self.rect.x = 20
-                # Game.bg_stop_l = True
-            Game.direction_num = -1
-            self.rect.x -= 8 
-            if self.rect.x <= Game.SCREEN_WIDTH -10:
-                Game.move_flag = False
+        if Game.on_leftkey():
+            self.on_left_key = True
+            if Game.move_flag:
+                Game.direction_num = -1
+                if self.rect.x <= 20:
+                    Game.direction_num = -1
+                    self.rect.x -= 8 
+                if self.rect.x <= Game.SCREEN_WIDTH -10:
+                    Game.move_flag = False
             if Game.field.movement_collision():
                 self.rect.x += 10
-            # if Game.bg_stop_l:
-            #     Game.forward_len -= 2
-                    
+                # if Game.bg_stop_l:
+                #     Game.forward_len -= 2
+        else:
+            self.on_left_key = False
+            
         # ジャンプ
         if self.landing and Game.on_spacekey():  
             self.jump()
@@ -108,6 +123,8 @@ class Player(pygame.sprite.Sprite, Character):
         # 画面外に落下した場合ゲームオーバー
         if self.rect.y > 704:
             Game.is_gameover = True 
+            
+    
 
     # 重力処理  
     def apply_gravity(self):

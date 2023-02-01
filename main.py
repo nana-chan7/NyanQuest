@@ -18,65 +18,49 @@ def init_game_info():
     Game.phase = Phase.TITLE
     
 # フォント    
-font = pygame.font.SysFont('Consolas', 30)
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
+
+# アイテムカウンタ
+item_count = font.render(str(Game.item),  True, (255,255,255))
 
 # ガチャメッセージ 
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
-# ガチャ処理
-def neko_gacha():
-    # 確率
-    prob = [0.3, 0.8, 0.6, 0.5] 
-    # ガチャ一回につき、一体排出
-    PIC = 1
-    obtain_cara = None
-    # 所持アイテムが10以下だったら
-    if Game.item < 10:
-        Game.gacha = False
-        # Game.gacha_error_flag = True
-        Game.surface.blit(gacha_error_msg, [15,300]) 
-        Game.gacha_count = 0
+# # ガチャ処理
+# def neko_gacha():
+#     # 確率
+#     prob = [0.3, 0.8, 0.6, 0.5] 
+#     # ガチャ一回につき、一体排出
+#     PIC = 1
+#     obtain_cara = None
+#     # 所持アイテムが10以下だったら
+#     if Game.item < 10:
+#         Game.gacha = False
+#         # Game.gacha_error_flag = True
+#         Game.surface.blit(gacha_error_msg, [15,300]) 
+#         Game.gacha_count = 0
          
-    # 所持アイテムが10以上だったらガチャを回す
-    elif Game.item >= 10 and Game.gacha:
-        # Game.gacha_error_flag = False
-        if Game.on_enterkey():
-            Game.gacha_count += 1
-            Game.gacha = False
-            Game.item -= 10     # アイテムを消費
-            obtain_cara = random.choices(Game.chara_list , weights=prob, k=PIC)
-            Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
-            # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
-            Game.surface.blit(Game.obtain_cara_img, (350,200))      # 結果表示
+#     # 所持アイテムが10以上だったらガチャを回す
+#     elif Game.item >= 10 and Game.gacha:
+#         # Game.gacha_error_flag = False
+#         if Game.on_enterkey():
+#             Game.gacha_count += 1
+#             Game.gacha = False
+#             Game.item -= 10     # アイテムを消費
+#             obtain_cara = random.choices(Game.chara_list , weights=prob, k=PIC)
+#             Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
+#             # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
+#             Game.surface.blit(Game.obtain_cara_img, (350,200))      # 結果表示
             
-            if Game.item >= 10 and Game.gacha_count >= 10000:
-                Game.surface.blit(gacha_msg, [15,300]) 
-                Game.gacha = True
-
-                
-# # 音楽再生処理
-# def game_music():
-#     if Game.music_flag == 0:        # タイトル画面の場合
-#         pygame.mixer.music.set_volume(0.3)
-#         pygame.mixer.music.play(-1)
-#     elif Game.music_flag == 1:      # ゲーム(フィールド)画面の場合
-#         pygame.mixer.music.set_volume(0.6)
-#         pygame.mixer.music.play(-1) 
-#     elif Game.music_flag == 2:       # マップ画面の場合
-#         pygame.mixer.music.set_volume(1.0)
-#         pygame.mixer.music.play(-1) 
-#     elif Game.music_flag == 3:      # ゲームオーバー画面の場合
-#         pygame.mixer.music.set_volume(0.5)
-#         pygame.mixer.music.play(-1)
-#     elif Game.music_flag == 4: # 何もしない処理
-#         pass
+#             if Game.item >= 10 and Game.gacha_count >= 10000:
+#                 Game.surface.blit(gacha_msg, [15,300]) 
+#                 Game.gacha = True
 
 # 音楽読み込み
 m1 = pygame.mixer.Sound("music/1.wav") 
-# m2 = pygame.mixer.music.load("music/2.wav") 
-# m3 = pygame.mixer.music.load("music/3.wav") 
+m2 = pygame.mixer.music.load("music/2.wav") 
+m3 = pygame.mixer.music.load("music/3.wav") 
 
 # 画像読み込み
 title_bg = pygame.image.load("bg_images/title_img.png")
@@ -147,10 +131,10 @@ def main():
             Game.surface.blit(map1_bg, (-x, 0))
             Game.surface.blit(map1_bg, (Game.SCREEN_WIDTH-x, 0))
             # マップ表示
-
-            # Game.field.run()
+            Game.field.run()
             # 操作方法表示
             Game.surface.blit(key_menu_img,(1000,10))
+            Game.surface.blit(item_count, [15,100]) 
             
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
