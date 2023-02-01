@@ -1,5 +1,6 @@
 import pygame
 import sys, cv2 
+import numpy as np
 import random
 from pygame.locals import *
 from game import Game, Phase
@@ -23,10 +24,11 @@ font = pygame.font.Font("font/Ronde-B_square.otf", 55)
 # アイテムカウンタ
 item_count = font.render(str(Game.item),  True, (255,255,255))
 
-# ガチャメッセージ 
+# ガチャメッセージ・動画
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
-
+gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
+gacha_neko = pygame.image.load("bg_images/1.png")
 
 # ガチャ処理
 def neko_gacha():
@@ -34,6 +36,7 @@ def neko_gacha():
     chara1 = pygame.image.load("chara_images/gacha/1.png")
     chara2 = pygame.image.load("chara_images/gacha/2.png")
     chara3 = pygame.image.load("chara_images/gacha/3.png")
+    pos = (350,200)
 
     # 確率
     prob = [0.3, 0.8, 0.6, 0.5] 
@@ -41,6 +44,7 @@ def neko_gacha():
     PIC = 1
     obtain_cara = None
     chara_list = [chara0, chara1, chara2, chara3]
+    color_list = [(255,0,0), (0,255,0), (0,0,255), (100,50,0)]
     pic_chara = None
     Game.gacha_count += 1
     # 所持アイテムが50以下だったら
@@ -57,23 +61,32 @@ def neko_gacha():
                 Game.gacha_count += 1
                 Game.item -= 50     # アイテムを消費
                 obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
-                pic_chara = obtain_cara[0]
+                Game.pic_chara = obtain_cara[0]
+                Game.chara_no = chara_list.index(Game.pic_chara)
                 # Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
                 # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
                 Game.print_flag = True
         if Game.print_flag:
-            Game.surface.blit(pic_chara, (350,200))      # 結果表示
-            if Game.gacha_count >= 1000 and Game.item >= 50:
-                Game.surface.blit(gacha_msg, [15,300]) 
-                if Game.on_okkey():
-                    Game.gacha = True
-                    Game.print_flag = False
+            Game.surface.blit(gacha_neko,((0, 0)))
+            Game.video_flag = True
+        if Game.video_flag:
+            Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
+        if Game.gacha_count >= 1000 and Game.item >= 50:
+            Game.surface.blit(gacha_msg, [15,300]) 
+            if Game.on_okkey():
+                Game.gacha = True
+                Game.print_flag = False
+                
+        return Game.chara_no
 
 
-# 音楽読み込み
-m1 = pygame.mixer.Sound("music/1.wav") 
-m2 = pygame.mixer.Sound("music/2.wav") 
-m3 = pygame.mixer.Sound("music/3.wav") 
+# # 音楽読み込み
+# pygame.mixer.Channel(0)
+# pygame.mixer.music.load("music/1.wav") 
+# m1 = pygame.mixer.Sound("music/1.wav") 
+# m2 = pygame.mixer.Sound("music/2.wav") 
+# m3 = pygame.mixer.Sound("music/3.wav") 
+
 
 # 画像読み込み
 title_bg = pygame.image.load("bg_images/title_img.png")
@@ -87,7 +100,7 @@ key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 def main():                 
     # ゲーム情報の初期化
     init_game_info() 
-
+    
     while True:
         Game.surface.fill((0,0,0))
         # game_music()    # 音楽再生
@@ -95,18 +108,22 @@ def main():
         Game.item = Game.count # アイテム 一旦
         Game.check_event()
         Game.move_flag = False
+        
+        
     
         # global font
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
-            m1.play(-1)
+            Game.music_flag = 1
             Game.surface.blit(title_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.START
+                Game.music_flag = 1
 
         # スタート画面
         elif Game.phase == Phase.START:
+            
             Game.wait_count -= 1
             Game.surface.blit(start_bg,(0,0))
             # カウントダウン表示
@@ -114,20 +131,21 @@ def main():
                 Game.count_down -= 1
             Game.count_text = str(Game.count_down).rjust(3) if Game.wait_count > 0 else 'ENTER!'
             Game.surface.blit(font.render(Game.count_text, True, (0, 0, 0)), (10, 650))
-            pygame.display.flip()
+            # pygame.display.flip()
             if Game.on_0key(): # 仮
                 Game.phase = Phase.MAP 
                 Game.move_flag = True 
-                m1.stop()
+                Game.music_stop = True
             elif Game.wait_count <= 0:
                 if Game.on_enterkey():
                     Game.phase = Phase.MAP 
                     Game.move_flag = True
-                    # m1.stop()
-                    
+                    Game.music_stop = True
+            if Game.music_stop:
+                pass
+              
         # マップ画面        
         elif Game.phase == Phase.MAP:
-            m2.play(-1)
             # Game.r_flag = True
             if Game.count % 10 == 0:
                 Game.player_count += 1
@@ -148,12 +166,10 @@ def main():
             
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
-                m2.stop()
             elif Game.boss_flag:
                 pass
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
-                # m2.stop()
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
             Game.map_no = 1
@@ -161,7 +177,6 @@ def main():
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
-            m3.play(-1)
             Game.surface.blit(gacha_bg,(0,0))
             if Game.on_enterkey():
                 Game.phase = Phase.GACHARESULT
@@ -173,7 +188,6 @@ def main():
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.phase = Phase.MAP
-                m3.stop()
 
             # video()
    
@@ -182,11 +196,12 @@ def main():
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_enterkey():
                 Game.is_gameover = False
-                pygame.mixer.music.stop()
+                pygame.mixer.stop()
                 main()
-
+  
         pygame.display.update()
         clock.tick(60)
+        
 
 if __name__ == '__main__':
     main()

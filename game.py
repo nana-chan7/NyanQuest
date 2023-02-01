@@ -70,7 +70,10 @@ class Game:
     
     command_able =True      # キー操作
     print_flag = False
-
+    pic_chara = 0
+    music_stop = False
+    music_flag = 0
+    video_flag = False
     
 
 
