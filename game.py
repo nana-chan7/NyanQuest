@@ -21,7 +21,7 @@ class Game:
     count_down, wait_count, count_text = 2, 120, '2'.rjust(3) # 5, 300, '5'.rjust(3)
 
     # ガチャ関連
-    item = 100                  # 所持アイテム(初期値：０)
+    item = 0                  # 所持アイテム(初期値：０)
     gacha_error_flag = False    # ガチャ可能フラグ
     obtain_cara_img = None      # 排出したキャラ
     my_chara_list = []          # 所持キャラリスト ※重複したくない
@@ -37,7 +37,7 @@ class Game:
     
     # キャラクター画像ダウンロード characters_image_list
 
-    chara_list = ["chara_images/gacha/0.png","chara_images/gacha/1.png","chara_images/gacha/2.png","chara_images/gacha/3.png"]
+    # chara_list = ["chara_images/gacha/0.png","chara_images/gacha/1.png","chara_images/gacha/2.png","chara_images/gacha/3.png"]
 
                       
     # プレイヤー処理関連
@@ -47,23 +47,17 @@ class Game:
     star_x, star_y = 0, 0       
     
     # 画面等処理関連
-    map_no = 0                 # マップ番号(初期値は０)
-    # bg_stop_r, bg_stop_l = False, False     # 背景スライドフラグ
-    # 仮 
-    # r_flag, l_flag = False, False
-    # r_scroll, l_scroll = False, False
-    move_flag = True    # 移動可能フラグ
-    block_no = 0        # ブロック番号
-    enemy_no = 0        # エネミーキャラ番号
-    boss_flag = False   # ボスフラグ
+    map_no = 0              # マップ番号(初期値は０)
+    direction_num = 0       # マップスクロール
+    move_flag = True        # 移動可能フラグ
+    block_no = 0            # ブロック番号
+    enemy_no = 0            # エネミーキャラ番号
+    boss_flag = False       # ボスフラグ
     
-
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号x 
     
     # 雑多組
-    # move_flag, r_flag, l_flag = False, False, False
-    direction_num = 0 # ディレクションのやつ
     forward_len = 0     # 背景？
     bg_pos = 0      # 背景の位置
     player_pos = 0 ##
@@ -73,7 +67,9 @@ class Game:
     chara_image = None
     number = 0
     start = False
-    command_able =True
+    
+    command_able =True      # キー操作
+    print_flag = False
 
     
 
@@ -111,20 +107,20 @@ class Game:
     @classmethod
     def on_spacekey(cls):
         return K_SPACE in Game.keymap
-    # @classmethod
-    # def on_enterkey(cls):
-    #     return K_RETURN in Game.keymap
-    
     @classmethod
     def on_enterkey(cls):
+        return K_RETURN in Game.keymap
+    
+    @classmethod
+    def on_okkey(cls):
         if Game.command_able:
-            if (K_RETURN in Game.keymap):
+            if Game.on_enterkey():
                 Game.command_able = False
                 return True
             else:
                 return False
         else:
-            if not (K_RETURN in Game.keymap):
+            if not Game.on_enterkey():
                 Game.command_able = True   
         return False    
 

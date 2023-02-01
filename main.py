@@ -27,6 +27,12 @@ item_count = font.render(str(Game.item),  True, (255,255,255))
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
+chara0 = pygame.image.load("chara_images/gacha/0.png")
+chara1 = pygame.image.load("chara_images/gacha/1.png")
+chara2 = pygame.image.load("chara_images/gacha/2.png")
+chara3 = pygame.image.load("chara_images/gacha/3.png")
+chara_list = [chara0, chara1, chara2, chara3]
+
 # ガチャ処理
 def neko_gacha():
     # 確率
@@ -45,16 +51,22 @@ def neko_gacha():
     elif Game.item >= 50:
         Game.gacha = True
         if Game.gacha:
-            if Game.on_enterkey():
+            if Game.on_okkey():
                 Game.gacha_count += 1
                 Game.item -= 50     # アイテムを消費
-                obtain_cara = random.choices(Game.chara_list , weights=prob, k=PIC)
-                Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
+                obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
+                # Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
                 # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
-                Game.surface.blit(Game.obtain_cara_img, (350,200))      # 結果表示
-                if Game.gacha_count >= 1000 and Game.item >= 50:
-                    Game.surface.blit(gacha_msg, [15,300]) 
+                Game.print_flag = True
+        if Game.print_flag:
+            Game.surface.blit(obtain_cara[0], (350,200))      # 結果表示
+            if Game.gacha_count >= 1000 and Game.item >= 50:
+                Game.surface.blit(gacha_msg, [15,300]) 
+                if Game.on_okkey():
                     Game.gacha = True
+                    Game.print_flag = False
+                    obtain_cara.clear
+
 
 # 音楽読み込み
 m1 = pygame.mixer.Sound("music/1.wav") 
@@ -78,6 +90,7 @@ def main():
         Game.surface.fill((0,0,0))
         # game_music()    # 音楽再生
         Game.count += 1     # ゲームカウンタ
+        Game.item = Game.count # アイテム 一旦
         Game.check_event()
         Game.move_flag = False
     
