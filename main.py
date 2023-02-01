@@ -27,19 +27,21 @@ item_count = font.render(str(Game.item),  True, (255,255,255))
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 
-chara0 = pygame.image.load("chara_images/gacha/0.png")
-chara1 = pygame.image.load("chara_images/gacha/1.png")
-chara2 = pygame.image.load("chara_images/gacha/2.png")
-chara3 = pygame.image.load("chara_images/gacha/3.png")
-chara_list = [chara0, chara1, chara2, chara3]
 
 # ガチャ処理
 def neko_gacha():
+    chara0 = pygame.image.load("chara_images/gacha/0.png")
+    chara1 = pygame.image.load("chara_images/gacha/1.png")
+    chara2 = pygame.image.load("chara_images/gacha/2.png")
+    chara3 = pygame.image.load("chara_images/gacha/3.png")
+
     # 確率
     prob = [0.3, 0.8, 0.6, 0.5] 
     # ガチャ一回につき、一体排出
     PIC = 1
     obtain_cara = None
+    chara_list = [chara0, chara1, chara2, chara3]
+    pic_chara = None
     Game.gacha_count += 1
     # 所持アイテムが50以下だったら
     if Game.item < 50:
@@ -55,17 +57,17 @@ def neko_gacha():
                 Game.gacha_count += 1
                 Game.item -= 50     # アイテムを消費
                 obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
+                pic_chara = obtain_cara[0]
                 # Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
                 # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
                 Game.print_flag = True
         if Game.print_flag:
-            Game.surface.blit(obtain_cara[0], (350,200))      # 結果表示
+            Game.surface.blit(pic_chara, (350,200))      # 結果表示
             if Game.gacha_count >= 1000 and Game.item >= 50:
                 Game.surface.blit(gacha_msg, [15,300]) 
                 if Game.on_okkey():
                     Game.gacha = True
                     Game.print_flag = False
-                    obtain_cara.clear
 
 
 # 音楽読み込み
