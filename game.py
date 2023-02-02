@@ -18,7 +18,7 @@ class Game:
     is_gameover = False     # ゲームオーバーフラグ
     
     # タイマー(カウンタ―)関連
-    count_down, wait_count, count_text = 2, 120, '2'.rjust(3) # 5, 300, '5'.rjust(3)
+    count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
 
     # ガチャ関連
     item = 0                  # 所持アイテム(初期値：０)
@@ -27,6 +27,7 @@ class Game:
     my_chara_list = []          # 所持キャラリスト ※重複したくない
     gacha_count = 0
     gacha = True
+    stop = 0
 
     # プレイヤー(キャラクター)
     chara_no = 0        # キャラクターナンバー(初期値は０)
@@ -71,9 +72,7 @@ class Game:
     command_able =True      # キー操作
     print_flag = False
     pic_chara = 0
-    music_stop = False
-    music_flag = 0
-    video_flag = False
+    anime_flag = False
     
 
 

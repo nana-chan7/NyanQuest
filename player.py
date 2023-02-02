@@ -56,7 +56,11 @@ class Player(pygame.sprite.Sprite, Character):
         self.on_right_key = False
         self.on_left_key = False
         self.move_dx = 0
-    
+        
+        self.move_list = [2, 1, 2, 1]
+        self.jump_list1 = [15, 10, 18, 20]
+        self.jump_list2 = [8, 5, 4, 6]
+        
     # キャラクターによって画像リストの差し替え
     def change_image_list(self, all_list, chara_no):
         self.image_list = all_list[chara_no]
@@ -71,14 +75,15 @@ class Player(pygame.sprite.Sprite, Character):
         Game.move_flag = True
         self.move_dx = 0
         self.x_before = self.rect.x
+
         # 右移動
         if Game.on_rightkey():
             if Game.move_flag:
                 Game.direction_num = 1
             for _ in range(8):
-                self.rect.x += 1
+                self.rect.x += self.move_list[Game.chara_no]
                 if Game.field.movement_collision():
-                    self.rect.x -= 1
+                    self.rect.x -= self.move_list[Game.chara_no]
                     break
                 self.move_dx = self.rect.x - self.x_before
         else:
@@ -88,9 +93,9 @@ class Player(pygame.sprite.Sprite, Character):
             if Game.move_flag:
                 Game.direction_num = -1
             for _ in range(8):
-                self.rect.x -= 1
+                self.rect.x -= self.move_list[Game.chara_no]
                 if Game.field.movement_collision():
-                    self.rect.x += 1
+                    self.rect.x += self.move_list[Game.chara_no]
                     break
                 self.move_dx = self.rect.x + self.x_before
         else:
@@ -114,25 +119,25 @@ class Player(pygame.sprite.Sprite, Character):
     # 重力処理  
     def apply_gravity(self):
         for i in range(10):
-            self.rect.y += 1
+            self.rect.y += 2
             if Game.field.movement_collision():
                 self.landing = True # 着地したら
                 self.jump_coount = 0
-                self.rect.y -= 1
+                self.rect.y -= 2
                 break
 
     # ジャンプ処理    
     def jump(self):
         if self.landing:
-            if self.jump_coount < 12:
-                self.rect.y -=10
-            elif self.jump_coount < 16:
-                self.rect.y -= 5
-            elif self.jump_coount < 22:
+            if self.jump_coount < 6:
+                self.rect.y -=self.jump_list1[Game.chara_no]
+            elif self.jump_coount < 8:
+                self.rect.y -= self.jump_list2[Game.chara_no]
+            elif self.jump_coount < 11:
                 self.landing = False
         if Game.field.movement_collision():
             for i in range(10):
-                self.rect.y += 1
+                self.rect.y += 2
             self.landing = False
             
         self.jump_coount += 1
