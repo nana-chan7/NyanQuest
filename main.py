@@ -28,26 +28,30 @@ gacha_error_msg = font.render("アイテムが足りません！また集めた�
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 
 # 画像
-gacha_neko = pygame.image.load("bg_images/1.png")
+gacha_neko1 = pygame.image.load("bg_images/gg1.png")
+gacha_neko2 = pygame.image.load("bg_images/gg2.png")
+gacha_neko3 = pygame.image.load("bg_images/gg3.png")
+gacha_neko4 = pygame.image.load("bg_images/gg4.png")
+gacha_neko5 = pygame.image.load("bg_images/gg5.png")
+
 chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
 chara3 = pygame.image.load("chara_images/gacha/3.png")
-g_list = 
+
 # アニメーション設定  
 def animation():
+    g_list = [gacha_neko1, gacha_neko2, gacha_neko3, gacha_neko4, gacha_neko5]
     count = Game.count % 10
-    if count >= len(g_list):
-        Game.enemy_count = 0
-    self.image_no = Game.enemy_count
-        
-    self.image = self.image_list[self.image_no]
-    Game.surface.blit(image_list[image_no])
+    for i in range(10):
+        if count >= len(g_list):
+            count = 0
+        Game.surface.blit(g_list[count], ((0, 0)))
+    Game.print_flag = True
 
 # ガチャ処理
 def neko_gacha():
     pos = (350,200)
-
     # 確率
     prob = [0.3, 0.8, 0.6, 0.5] 
     # ガチャ一回につき、一体排出
@@ -75,12 +79,11 @@ def neko_gacha():
                 Game.chara_no = chara_list.index(Game.pic_chara)
                 # Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
                 # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
-                Game.print_flag = True
-        if Game.print_flag:
-            Game.count % 5 == 0:
-            Game.surface.blit(gacha_neko,((0, 0)))
-            Game.video_flag = True
-        if Game.video_flag:
+                Game.anime_flag = True
+        if Game.anime_flag:
+            animation()
+        elif Game.print_flag:
+            Game.anime_flag = False
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
         if Game.gacha_count >= 1000 and Game.item >= 50:
             Game.surface.blit(gacha_msg, [15,300]) 
