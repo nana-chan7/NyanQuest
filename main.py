@@ -41,13 +41,14 @@ chara3 = pygame.image.load("chara_images/gacha/3.png")
 
 # アニメーション設定  
 def animation():
+    Game.anime_flag = False
     g_list = [gacha_neko1, gacha_neko2, gacha_neko3, gacha_neko4, gacha_neko5]
     count = Game.count % 10
-    for i in range(10):
+    for i in range(5):
         if count >= len(g_list):
             count = 0
         Game.surface.blit(g_list[count], ((0, 0)))
-    Game.print_flag = True
+        Game,print_flag = True
 
 # ガチャ処理
 def neko_gacha():
