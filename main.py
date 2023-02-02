@@ -21,21 +21,31 @@ def init_game_info():
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
 
-# アイテムカウンタ
-item_count = font.render(str(Game.item),  True, (255,255,255))
 
-# ガチャメッセージ・動画
+# ガチャメッセージ
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,255,255))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (255,255,255))
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
+
+# 画像
 gacha_neko = pygame.image.load("bg_images/1.png")
+chara0 = pygame.image.load("chara_images/gacha/0.png")
+chara1 = pygame.image.load("chara_images/gacha/1.png")
+chara2 = pygame.image.load("chara_images/gacha/2.png")
+chara3 = pygame.image.load("chara_images/gacha/3.png")
+g_list = 
+# アニメーション設定  
+def animation():
+    count = Game.count % 10
+    if count >= len(g_list):
+        Game.enemy_count = 0
+    self.image_no = Game.enemy_count
+        
+    self.image = self.image_list[self.image_no]
+    Game.surface.blit(image_list[image_no])
 
 # ガチャ処理
 def neko_gacha():
-    chara0 = pygame.image.load("chara_images/gacha/0.png")
-    chara1 = pygame.image.load("chara_images/gacha/1.png")
-    chara2 = pygame.image.load("chara_images/gacha/2.png")
-    chara3 = pygame.image.load("chara_images/gacha/3.png")
     pos = (350,200)
 
     # 確率
@@ -67,6 +77,7 @@ def neko_gacha():
                 # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
                 Game.print_flag = True
         if Game.print_flag:
+            Game.count % 5 == 0:
             Game.surface.blit(gacha_neko,((0, 0)))
             Game.video_flag = True
         if Game.video_flag:
@@ -162,8 +173,9 @@ def main():
             Game.field.run()
             # 操作方法表示
             Game.surface.blit(key_menu_img,(1000,10))
-            Game.surface.blit(item_count, [15,100]) 
-            
+            # アイテムカウンタ
+            Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
+
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
             elif Game.boss_flag:
