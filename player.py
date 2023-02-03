@@ -3,7 +3,7 @@ from game import Game
 from character import Character
 
 class Player(pygame.sprite.Sprite, Character):
-    def __init__(self,pos):
+    def __init__(self, pos):
         # プレイヤーキャラ画像
         # 棒人間
         a_1 = pygame.image.load("chara_images/0/1.png")
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite, Character):
         self.move_dx = 0
         
         self.move_list = [2, 1, 2, 1]
-        self.jump_list1 = [15, 10, 18, 20]
+        self.jump_list1 = [15, 10, 18, 23]
         self.jump_list2 = [8, 5, 4, 6]
         
     # キャラクターによって画像リストの差し替え
@@ -142,6 +142,11 @@ class Player(pygame.sprite.Sprite, Character):
             self.landing = False
             
         self.jump_coount += 1
+    
+    # 仮
+    
+    
+    
         
     # 攻撃処理              
     def player_attack(self):

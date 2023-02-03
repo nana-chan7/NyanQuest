@@ -21,6 +21,7 @@ class Filed:
        self.tiles = pygame.sprite.Group()
        self.player = pygame.sprite.GroupSingle()
        self.enemy = pygame.sprite.Group()
+       
        self.boss = pygame.sprite.Group()
 
        
@@ -101,10 +102,11 @@ class Filed:
             if self.tile_rect.rect.y <= player.rect.y:
                 Game.phase == Phase.BOSS
                 
-    def atack_collision(self):
-        player = self.player.sprite
-        enemy =  self.enemy.sprite
-        
+    # def atack_collision(self):
+    #     player = self.player.sprite
+    #     a_flag = pygame.sprite.spritecollide(player, self.enemy.sprite(), False)
+    #     if len(a_flag) != 0:
+    #         return True
         
     # リスタート時
     def re_start(self):
@@ -156,6 +158,8 @@ class Filed:
         # 敵
         self.enemy.update(self.world_shift)
         self.enemy.draw(Game.surface)
+        # self.enemy.enemy_move()
+        # self.enemy.get_action()
         self.scroll_x() 
 
     # マップ(仮)

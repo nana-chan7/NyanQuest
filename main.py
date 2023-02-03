@@ -130,7 +130,7 @@ def main():
                 m1.play(-1)
                 music_flag = 0
             Game.surface.blit(title_bg,(0,0))
-            if Game.on_enterkey():
+            if Game.on_okkey():
                 Game.phase = Phase.START
 
         # スタート画面
@@ -150,7 +150,7 @@ def main():
                     music_flag = 2
 
             elif Game.wait_count <= 0:
-                if Game.on_enterkey():
+                if Game.on_okkey():
                     Game.phase = Phase.MAP 
                     Game.move_flag = True
                     if music_flag == 0:
@@ -225,7 +225,7 @@ def main():
             if music_flag == 5:
                 pass
             Game.surface.blit(gameover_bg,(0,0))
-            if Game.on_enterkey():
+            if Game.on_okkey():
                 Game.is_gameover = False
                 pygame.mixer.stop()
                 main()

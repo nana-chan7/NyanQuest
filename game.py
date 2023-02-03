@@ -45,8 +45,8 @@ class Game:
     enemy_no = 0            # エネミーキャラ番号
     boss_flag = False       # ボスフラグ
     
-    # player_count = 0      # プレイヤーキャラアニメーション番号
-    # enemy_count = 0       # エネミーキャラアニメーション番号x 
+    player_count = 0      # プレイヤーキャラアニメーション番号
+    enemy_count = 0       # エネミーキャラアニメーション番号x 
     
     # 雑多組
     enemy_x, enemy_y = 0, 0

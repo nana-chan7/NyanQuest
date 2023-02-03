@@ -16,12 +16,13 @@ class Character:
         if Game.player_count >= 2:
             Game.player_count = 0
         self.image_no = Game.player_count
-        if Game.on_rightkey():
+        if Game.on_rightkey() or Game.on_ckey():
             self.image_no 
-        elif Game.on_leftkey():
+        elif Game.on_leftkey() or Game.on_xkey():
             self.image_no += 2
         elif Game.on_spacekey():
             self.image_no += 4
+        
 
 
         self.image = self.image_list[self.image_no]
