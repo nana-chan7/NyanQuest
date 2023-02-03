@@ -5,6 +5,7 @@ from character import Character
 class Player(pygame.sprite.Sprite, Character):
     def __init__(self,pos):
         # プレイヤーキャラ画像
+        # 棒人間
         a_1 = pygame.image.load("chara_images/0/1.png")
         a_2 = pygame.image.load("chara_images/0/2.png")
         a_3 = pygame.transform.flip(a_1, 1, 0)
@@ -12,7 +13,7 @@ class Player(pygame.sprite.Sprite, Character):
         a_5 = pygame.image.load("chara_images/0/5.png")
         a_6 = pygame.image.load("chara_images/0/6.png")
         a_list = [a_1, a_2, a_3, a_4, a_5, a_6]
-        
+        # 猫王
         b_1 = pygame.image.load("chara_images/1/1.png")
         b_2 = pygame.image.load("chara_images/1/2.png")
         b_3 = pygame.transform.flip(b_1, 1, 0)
@@ -20,7 +21,7 @@ class Player(pygame.sprite.Sprite, Character):
         b_5 = pygame.image.load("chara_images/1/5.png")
         b_6 = pygame.image.load("chara_images/1/6.png")
         b_list = [b_1, b_2, b_3, b_4, b_5, b_6]
-
+        # マラソン猫
         c_1 = pygame.image.load("chara_images/2/1.png")
         c_2 = pygame.image.load("chara_images/2/2.png")
         c_3 = pygame.transform.flip(c_1, 1, 0)
@@ -28,7 +29,7 @@ class Player(pygame.sprite.Sprite, Character):
         c_5 = pygame.image.load("chara_images/2/5.png")
         c_6 = pygame.image.load("chara_images/2/6.png")
         c_list = [c_1, c_2, c_3, c_4, c_5, c_6]
-        
+        # ドラ？もん
         d_1 = pygame.image.load("chara_images/3/1.png")
         d_2 = pygame.image.load("chara_images/3/2.png")
         d_3 = pygame.transform.flip(d_1, 1, 0)

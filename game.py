@@ -10,36 +10,26 @@ class Game:
     SCREEN_HEIGHT = 704     # ウィンドウの高さ
     
     # クラス変数
-    keymap = []     
-    field = None 
-    surface = None
-    phase = None
+    keymap = []             # キーマップ
+    field = None            # フィールド
+    surface = None          # 描画
+    phase = None            # フェーズ
     count = 0               # ゲームカウンタ
     is_gameover = False     # ゲームオーバーフラグ
     
-    # タイマー(カウンタ―)関連
+    # タイマー処理
     count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
 
-    # ガチャ関連
-    item = 0                  # 所持アイテム(初期値：０)
-    gacha_error_flag = False    # ガチャ可能フラグ
-    obtain_cara_img = None      # 排出したキャラ
-    my_chara_list = []          # 所持キャラリスト ※重複したくない
-    gacha_count = 0
-    gacha = True
-    stop = 0
-
+    # ガチャ処理等
+    item = 200                  # 所持アイテム(初期値：０)
+    gacha = True                # ガチャフラグ
+    pic_chara = 0               # ピックキャラ
+    anime_flag = False          # ガチャ回転中アニメーションフラグ
+    print_flag = False          # 結果表示フラグ
+    command_able =True      # キー押下判定用フラグ
+    
     # プレイヤー(キャラクター)
     chara_no = 0        # キャラクターナンバー(初期値は０)
-    # 全てのキャラリスト
-    # CHARACTER_LIST1 = ["chara_images/obake_neko.png","chara_images/robo_neko.png","chara_images/fue_neko.png",
-    #                     "chara_images/kotatu_neko.png","chara_images/natu_neko.png","chara_images/yume_neko.png"]         
-    # CHARACTER_LIST = ["obake_neko","robo_neko","fue_neko"]
-    
-    # キャラクター画像ダウンロード characters_image_list
-
-    # chara_list = ["chara_images/gacha/0.png","chara_images/gacha/1.png","chara_images/gacha/2.png","chara_images/gacha/3.png"]
-
                       
     # プレイヤー処理関連
     jump_flag = False           # ジャンプ
@@ -55,27 +45,12 @@ class Game:
     enemy_no = 0            # エネミーキャラ番号
     boss_flag = False       # ボスフラグ
     
-    player_count = 0      # プレイヤーキャラアニメーション番号
-    enemy_count = 0       # エネミーキャラアニメーション番号x 
+    # player_count = 0      # プレイヤーキャラアニメーション番号
+    # enemy_count = 0       # エネミーキャラアニメーション番号x 
     
     # 雑多組
-    forward_len = 0     # 背景？
-    bg_pos = 0      # 背景の位置
-    player_pos = 0 ##
-    player = None
     enemy_x, enemy_y = 0, 0
     
-    chara_image = None
-    number = 0
-    start = False
-    
-    command_able =True      # キー操作
-    print_flag = False
-    pic_chara = 0
-    anime_flag = False
-    
-
-
     # イベントチェック処理
     @classmethod
     def check_event(cls):

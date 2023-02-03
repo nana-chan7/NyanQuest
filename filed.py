@@ -100,6 +100,11 @@ class Filed:
         if self.tile_rect.rect.x <= player.rect.x:
             if self.tile_rect.rect.y <= player.rect.y:
                 Game.phase == Phase.BOSS
+                
+    def atack_collision(self):
+        player = self.player.sprite
+        enemy =  self.enemy.sprite
+        
         
     # リスタート時
     def re_start(self):

@@ -24,6 +24,7 @@ gacha_error_msg = font.render("アイテムが足りません！また集めた�
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 
 # ガチャ画像
+gacha_bg = pygame.image.load("bg_images/gacha_img.png")
 gacha_neko1 = pygame.image.load("bg_images/gg1.png")
 gacha_neko2 = pygame.image.load("bg_images/gg2.png")
 gacha_neko3 = pygame.image.load("bg_images/gg3.png")
@@ -37,7 +38,6 @@ chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
 chara3 = pygame.image.load("chara_images/gacha/3.png")
-
 # ガチャ処理
 def neko_gacha():
     count = 0
@@ -53,6 +53,7 @@ def neko_gacha():
     # 所持アイテムが50以下だったら
     if Game.item < 50:
         Game.gacha = False
+        Game.surface.fill((255,255,255))
         Game.surface.blit(gacha_error_msg, [15,300]) 
         #Game.gacha_count = 0
          
@@ -61,15 +62,13 @@ def neko_gacha():
         Game.gacha = True
         if Game.gacha:
             if Game.on_okkey():
-                Game.print_flag = False
+                # Game.print_flag = False
                 stop2 = 0
                 #Game.gacha_count += 1
                 Game.item -= 50     # アイテムを消費
                 obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
                 Game.pic_chara = obtain_cara[0]
-                Game.chara_no = chara_list.index(Game.pic_chara)
-                # Game.obtain_cara_img = pygame.image.load(obtain_cara[0])
-                # Game.my_chara_list.append(obtain_cara[0])       # 手持ちに追加     
+                Game.chara_no = chara_list.index(Game.pic_chara) 
                 Game.anime_flag = True 
                      
         if Game.anime_flag:
@@ -107,7 +106,6 @@ music_flag = 1
 # 画像読み込み
 title_bg = pygame.image.load("bg_images/title_img.png")
 start_bg = pygame.image.load("bg_images/start_img.png")
-gacha_bg = pygame.image.load("bg_images/gacha_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
@@ -121,7 +119,7 @@ def main():
         Game.surface.fill((0,0,0))
         # game_music()    # 音楽再生
         Game.count += 1     # ゲームカウンタ
-        Game.item = Game.count # アイテム 一旦
+        # Game.item = Game.count # アイテム 一旦
         Game.check_event()
         Game.move_flag = False
         global music_flag
@@ -166,7 +164,7 @@ def main():
             if music_flag ==2:
                 m2.play(-1)
                 music_flag = 0
-            
+            Game.surface.blit(gacha_bg,(0,0))
             if Game.count % 5 == 0:
                 Game.player_count += 1
             if Game.count % 9 == 0:
@@ -174,10 +172,6 @@ def main():
             Game.surface.fill((128,224,235))
             # 背景
             Game.surface.blit(map1_bg, (0, 0))
-            # # のスライド    
-            # x = Game.forward_len % Game.SCREEN_WIDTH
-            # Game.surface.blit(map1_bg, (-x, 0))
-            # Game.surface.blit(map1_bg, (Game.SCREEN_WIDTH-x, 0))
             # マップ表示
             Game.field.run()
             # 操作方法表示
@@ -218,6 +212,7 @@ def main():
             neko_gacha()
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
+                Game.print_flag = False
                 Game.phase = Phase.MAP
                 if music_flag == 0:
                     m3.stop()
