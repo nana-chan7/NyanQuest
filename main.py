@@ -8,13 +8,13 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
-Game.field = Filed(Filed.map_list[Game.map_no])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
-    
+    Game.field = Filed(Filed.map_list[Game.map_no])
+
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
 
@@ -180,7 +180,9 @@ def main():
             Game.surface.blit(key_menu_img,(1000,10))
             # アイテムカウンタ
             Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
-
+            # HP
+            Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
+            # ガチャ画面へ
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 if music_flag == 0:
