@@ -4,9 +4,7 @@ from game import Game
 class Character:
     def __init__(self):
         # 画像リスト
-        # self.image_list = image_list
         self.image = None
-        # self.image_list = []*2
         # 初期画像番号 0
         self.image_no = 0
         
@@ -22,8 +20,6 @@ class Character:
             self.image_no += 2
         elif Game.on_spacekey():
             self.image_no += 4
-        
-
 
         self.image = self.image_list[self.image_no]
         return self.image
@@ -34,7 +30,6 @@ class Character:
         if Game.enemy_count >= len(self.image_list):
             Game.enemy_count = 0
         self.image_no = Game.enemy_count
-            
         self.image = self.image_list[self.image_no]
         return self.image
     

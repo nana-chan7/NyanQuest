@@ -8,18 +8,19 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
-Game.field = Filed(Filed.map_list[Game.map_no])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
-    
+    Game.field = Filed(Filed.map_list[Game.map_no])
+
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
 
 # ガチャメッセージ・SE
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
+gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 
@@ -85,6 +86,7 @@ def neko_gacha():
         elif Game.print_flag:
             stop2 += 1
             Game.surface.fill((0,50,100))
+            Game.surface.blit(gacha_pic_msg, [100,50])
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
             if Game.item >= 50 and stop2 >= 20:
                 Game.surface.blit(gacha_msg, [15,500])
@@ -178,7 +180,9 @@ def main():
             Game.surface.blit(key_menu_img,(1000,10))
             # アイテムカウンタ
             Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
-
+            # HP
+            Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
+            # ガチャ画面へ
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 if music_flag == 0:

@@ -58,6 +58,9 @@ class Player(pygame.sprite.Sprite, Character):
         self.on_left_key = False
         self.move_dx = 0
         
+        self.hp_list = [100, 100, 200, 150]
+        self.hp = self.hp_list[Game.chara_no]
+        
         self.move_list = [2, 1, 2, 1]
         self.jump_list1 = [15, 10, 18, 23]
         self.jump_list2 = [8, 5, 4, 6]
@@ -72,7 +75,7 @@ class Player(pygame.sprite.Sprite, Character):
     def get_input(self):
         self.count += 1
         self.now_rect = self.rect
-        # Game.collided_flag = False
+        Game.kill = False
         Game.move_flag = True
         self.move_dx = 0
         self.x_before = self.rect.x
@@ -86,6 +89,10 @@ class Player(pygame.sprite.Sprite, Character):
                 if Game.field.movement_collision():
                     self.rect.x -= self.move_list[Game.chara_no]
                     break
+                if Game.field.damage_collision():
+                    self.rect.x -= self.move_list[Game.chara_no]
+                    self.hp -= 10
+                    break
                 self.move_dx = self.rect.x - self.x_before
         else:
             self.on_right_key = False
@@ -98,7 +105,12 @@ class Player(pygame.sprite.Sprite, Character):
                 if Game.field.movement_collision():
                     self.rect.x += self.move_list[Game.chara_no]
                     break
-                self.move_dx = self.rect.x + self.x_before
+                if Game.field.damage_collision():
+                    self.rect.x += self.move_list[Game.chara_no]
+                    self.hp -= 10
+                    break
+
+                self.move_dx = self.x_before - self.rect.x
         else:
             self.on_left_key = False
             
@@ -112,20 +124,10 @@ class Player(pygame.sprite.Sprite, Character):
             
             
         # 画面外に落下した場合ゲームオーバー
-        if self.rect.y > 704:
+        if self.rect.y > 704 or Game.hp <= 0:
             Game.is_gameover = True 
-            
-    
-
-    # 重力処理  
-    def apply_gravity(self):
-        for i in range(10):
-            self.rect.y += 2
-            if Game.field.movement_collision():
-                self.landing = True # 着地したら
-                self.jump_coount = 0
-                self.rect.y -= 2
-                break
+        
+        Game.hp = self.hp       # HP
 
     # ジャンプ処理    
     def jump(self):
@@ -142,12 +144,23 @@ class Player(pygame.sprite.Sprite, Character):
             self.landing = False
             
         self.jump_coount += 1
-    
-    # 仮
-    
-    
-    
         
+    # 重力処理  
+    def apply_gravity(self):
+        for i in range(10):
+            self.rect.y += 2
+            if Game.field.movement_collision():
+                self.landing = True # 着地したら
+                self.jump_coount = 0
+                self.rect.y -= 2
+                break
+            if Game.field.damage_collision():
+                self.landing = True # 着地したら
+                self.jump_coount = 0
+                self.rect.y -= 2
+                Game.kill = True
+                break
+
     # 攻撃処理              
     def player_attack(self):
         r_atack_x, r_atack_y = self.rect.x + 70, self.rect.y + 10
@@ -157,15 +170,13 @@ class Player(pygame.sprite.Sprite, Character):
         elif Game.on_xkey(): 
             Game.surface.blit(self.player_attack_img,(l_atack_x, l_atack_y))
         
-    # リスタート処理      
-    def re_start(self):
-        if Game.is_gameover:
-            self.rect.x, self.rect.y = 100, 30      
+        # ダメージ判定
+        if Game.field.damage_collision():
+            self.hp_list[Game.chara_no] -= 10       
     
     # 更新処理            
     def update(self):
-        self.get_input()
-        self.re_start() 
+        self.get_input() 
         self.change_image_list(self.all_image_list, Game.chara_no)
         self.set_chara_animation(self.image_list)
         self.player_attack()

@@ -21,7 +21,7 @@ class Game:
     count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
 
     # ガチャ処理等
-    item = 200                  # 所持アイテム(初期値：０)
+    item = 0                    # 所持アイテム(初期値：０)
     gacha = True                # ガチャフラグ
     pic_chara = 0               # ピックキャラ
     anime_flag = False          # ガチャ回転中アニメーションフラグ
@@ -30,6 +30,8 @@ class Game:
     
     # プレイヤー(キャラクター)
     chara_no = 0        # キャラクターナンバー(初期値は０)
+    hp = 100
+    hp_list = [100, 20, 40, 70]
                       
     # プレイヤー処理関連
     jump_flag = False           # ジャンプ
@@ -50,6 +52,8 @@ class Game:
     
     # 雑多組
     enemy_x, enemy_y = 0, 0
+    kill = False
+    enemy_self = 0
     
     # イベントチェック処理
     @classmethod
@@ -69,12 +73,6 @@ class Game:
                 
 
     # キーチェック処理
-    # @classmethod
-    # def on_upkey(cls):
-    #     return K_UP in Game.keymap
-    # @classmethod
-    # def on_downkey(cls):
-    #     return K_DOWN in Game.keymap
     @classmethod
     def on_rightkey(cls):
         return K_RIGHT in Game.keymap
@@ -101,10 +99,6 @@ class Game:
                 Game.command_able = True   
         return False    
 
-    # # メニュー
-    # @classmethod        
-    # def on_mkey(cls):
-    #     return K_m in Game.keymap
     # ガチャ
     @classmethod        
     def on_gkey(cls):
@@ -117,10 +111,6 @@ class Game:
     @classmethod
     def on_0key(cls):
         return K_0 in Game.keymap
-    # 仮用
-    @classmethod
-    def on_9key(cls):
-        return K_9 in Game.keymap
     # 攻撃 右方向
     @classmethod
     def on_ckey(cls):
