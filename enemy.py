@@ -22,16 +22,10 @@ class Enemy(pygame.sprite.Sprite,Character):
         y_6 = pygame.transform.flip(y_3, 1, 0)
         self.y_list = [y_1, y_2, y_3, y_4, y_5, y_6]
         super().__init__()  
-        self.enemy_no = 0
+        # self.enemy_no = 0
         self.all_image_list = [self.z_list, self.y_list]   
         self.image = self.set_enemy_animation(self.all_image_list[Game.enemy_no])
         self.rect = self.image.get_rect(topleft=pos)
-             
-        # self.image = self.set_enemy_animation(self.all_image_list[Game.enemy_no])
-        # self.rect = self.image.get_rect(topleft=pos)
-        # Game.enemy_x, Game.enemy_y = self.rect.x, self.rect.y
-        # self.hp = 50
-        # self.d_flag = False
 
     # # 仮
     # def get_action(self):
@@ -70,10 +64,16 @@ class Enemy(pygame.sprite.Sprite,Character):
     
 class Boss(pygame.sprite.Sprite,Character):
     def __init__(self,pos):
-        super().__init__()
+        # super().__init__()
+        super().__init__()  
         self.image_list = (pygame.image.load("enemy_images/0/1.png"),
-                            pygame.image.load("enemy_images/0/2.png"))
+                    pygame.image.load("enemy_images/0/2.png"))
 
-        self.image = self.set_enemy_animation(self.image_list)
+        # self.enemy_no = 0  
+        self.image = self.set_enemy_animation(self.image_list[Game.enemy_no])
         self.rect = self.image.get_rect(topleft=pos)
-        # Game.enemy_x, Game.enemy_y = self.rect.x, self.rect.y
+        
+    def update(self, x_shift):
+        self.rect.x += x_shift    
+        self.set_enemy_animation(self.image_list)  
+

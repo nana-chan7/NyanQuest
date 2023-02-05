@@ -20,6 +20,7 @@ font = pygame.font.Font("font/Ronde-B_square.otf", 55)
 
 # ガチャメッセージ・SE
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
+gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 
@@ -85,6 +86,7 @@ def neko_gacha():
         elif Game.print_flag:
             stop2 += 1
             Game.surface.fill((0,50,100))
+            Game.surface.blit(gacha_pic_msg, [100,50])
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
             if Game.item >= 50 and stop2 >= 20:
                 Game.surface.blit(gacha_msg, [15,500])
