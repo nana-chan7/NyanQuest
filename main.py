@@ -19,7 +19,8 @@ def init_game_info():
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
-
+msg_font = pygame.font.Font("font/Ronde-B_square.otf", 45)   
+    
 # ガチャメッセージ・SE
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
@@ -36,7 +37,6 @@ gacha_neko5 = pygame.image.load("bg_images/gg5.png")
 g_list = [gacha_neko1, gacha_neko2, gacha_neko3, gacha_neko4, gacha_neko5]
 stop1 = 0
 stop2 = 0
-
 chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
@@ -112,6 +112,12 @@ boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
+# メッセージ
+retry_msg1 = msg_font.render("RETRY : PUSH ENTERKEY", True, (0,47,129))
+retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (116,144,167))
+retry_msg3 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
+retry_msg_list = [retry_msg1, retry_msg2, retry_msg3]
+msg_count = 0
 
 # メイン処理
 def main():                 
@@ -123,7 +129,7 @@ def main():
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
-        global music_flag
+        global music_flag, msg_count
         Game.map = 0
         
         # タイトル画面
@@ -191,7 +197,6 @@ def main():
                     music_flag = 3
             # ボスマップへ
             elif Game.boss_flag:
-                Game.field = Filed(Filed.map_list[1])
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
@@ -208,7 +213,6 @@ def main():
             Game.surface.blit(boss_bg, (0, 0))
             if music_flag == 4:
                 pass
-            Game.field.run()
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -231,6 +235,17 @@ def main():
                 m2.play(-1)
                 music_flag = 0
             Game.surface.blit(gameover_bg,(0,0))
+            if Game.count % 40 == 0:
+                msg_count = 0
+            elif Game.count % 40 == 1:
+                msg_count = 1
+            elif Game.count % 40 == 2:
+                msg_count = 2
+            elif Game.count % 40 == 3:
+                msg_count = 1
+                
+            Game.surface.blit(retry_msg_list[msg_count], [420,650])
+
             if Game.on_okkey():
                 if music_flag == 0:
                     m2.stop()
