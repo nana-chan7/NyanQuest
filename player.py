@@ -134,9 +134,9 @@ class Player(pygame.sprite.Sprite, Character):
         if self.rect.y > 704 or Game.hp <= 0:
             Game.is_gameover = True 
         
-        # 踏み攻撃
-        if Game.field.step_on_collision():
-            Game.item += 50
+        # # 踏み攻撃
+        # if Game.field.step_on_collision():
+        #     Game.item += 50
             
         if Game.field.damage_collision():
             Game.hp -= 10
@@ -192,32 +192,3 @@ class Player(pygame.sprite.Sprite, Character):
         self.change_image_list(self.all_image_list, Game.chara_no)
         self.set_chara_animation(self.image_list)
 
-class Atack(pygame.sprite.Sprite, Character):
-    def __init__(self, pos):
-        
-        atack1 = pygame.image.load("images/attack_star.png")
-        # atack_list = [atack1]
-        
-        super().__init__()
-
-        # アタック画像
-        self.alll_atack_list = [atack1]
-        self.image = self.alll_atack_list[Game.chara_no]
-        
-        self.rect = self.image.get_rect(topleft=pos)
-
-    # 攻撃処理              
-    def player_attack(self):
-        if Game.on_ckey(): 
-            self.rect.x = Game.player_pos.x + 20
-            self.rect.y = Game.player_pos.y + 20
-        elif Game.on_xkey(): 
-            self.rect.x = Game.player_pos.x - 20
-            self.rect.y = Game.player_pos.y - 20
-            
-    # 更新処理            
-    def update(self):
-        self.player_attack()
-
-        
-    
