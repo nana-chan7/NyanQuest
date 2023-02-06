@@ -33,12 +33,10 @@ class Game:
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
     hp_list = [100, 20, 40, 70]
+    se_flag = 0     # SE
                       
     # プレイヤー処理関連
-    jump_flag = False           # ジャンプ
-    # プレイヤー攻撃
-    p_attack_flag = False       # アタックフラグ
-    star_x, star_y = 0, 0       
+    jump_flag = False          # ジャンプ   
     
     # 画面等処理関連
     map_no = 0              # マップ番号(初期値は０)

@@ -94,34 +94,47 @@ class Filed:
     # プレイヤーとブロックの当たり判定        
     def movement_collision(self):
         player = self.player.sprite
-        flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
-        if len(flag) != 0:
-            return True
-        
+        # flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
+        flag = pygame.sprite.spritecollide(player, self.tiles, False)
+        # if len(flag) != 0:
+        #     return True
+        if flag:
+            oldrect = player.rect
+            for tile in flag:        
+                # 左から衝突
+                if oldrect.left < tile.rect.left < oldrect.right < tile.rect.right:
+                    return True
+                # 右から衝突
+                if tile.rect.left < oldrect.left < tile.rect.right < oldrect.right:
+                    return True
+                # 上から衝突
+                if oldrect.top < tile.rect.top < oldrect.bottom < tile.rect.bottom:
+                    return True
+                # 下から衝突
+                if tile.rect.top < oldrect.top < tile.rect.bottom < oldrect.bottom:
+                    return True
+            
+    # ダメージ判定
     def damage_collision(self):
         player = self.player.sprite
         flag = pygame.sprite.spritecollide(player, self.enemy.sprites(), False)
         if len(flag) != 0:
+            Game.se_flag = 1
+            Game.hp -= 5
             return True
             
-    # アタック・ダメージ            
+    # アタック判定          
     def step_on_collision(self):
         player = self.player.sprite
         step_on_enemy = pygame.sprite.spritecollide(player, self.enemy, True)
         if step_on_enemy:
             oldrect = player.rect
             for enemy in step_on_enemy:
-                # # 右から衝突
-                # if enemy.rect.left < oldrect.left < enemy.rect.right < oldrect.right:
-                #     return True
-                # # 左から衝突
-                # if oldrect.left < enemy.rect.left < oldrect.right < enemy.rect.right:
-                #     return True
             # 上からは踏み攻撃 
                 if oldrect.top < enemy.rect.top < oldrect.bottom < enemy.rect.bottom:
+                    Game.item += 40
                     return True
-                    
-            
+
         
     def run(self):
         # プレイヤー

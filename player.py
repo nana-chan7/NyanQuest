@@ -37,8 +37,15 @@ class Player(pygame.sprite.Sprite, Character):
         d_5 = pygame.image.load("chara_images/3/5.png")
         d_6 = pygame.image.load("chara_images/3/6.png")
         d_list = [d_1, d_2, d_3, d_4, d_5, d_6]
-
+        
         super().__init__()
+        
+        # SE
+        self.n1 = pygame.mixer.Sound("music/se/nakigoe1.wav")
+        self.n1.set_volume(0.05)
+        self.n2 = pygame.mixer.Sound("music/se/nakigoe2.wav")
+        self.n2.set_volume(0.05)
+        
         self.chara_no = 0
         # キャラクター画像
         self.all_image_list = [a_list, b_list, c_list, d_list]
@@ -64,6 +71,8 @@ class Player(pygame.sprite.Sprite, Character):
         self.jump_list1 = [15, 10, 18, 23]
         self.jump_list2 = [8, 5, 4, 6]
         
+        self.se = 0
+        
     # キャラクターによって画像リストの差し替え
     def change_image_list(self, all_list, chara_no):
         self.image_list = all_list[chara_no]
@@ -78,6 +87,7 @@ class Player(pygame.sprite.Sprite, Character):
         Game.move_flag = True
         self.move_dx = 0
         self.x_before = self.rect.x
+        Game.field.movement_collision()
 
         # 右移動
         if Game.on_rightkey():
@@ -89,9 +99,7 @@ class Player(pygame.sprite.Sprite, Character):
                     self.rect.x -= self.move_list[Game.chara_no]
                     break
                 if Game.field.damage_collision():
-                    self.rect.x -= self.move_list[Game.chara_no] + 10
-                    
-                    Game.hp -= 10
+                    self.rect.x -= 5
                     break
                 self.move_dx = self.rect.x - self.x_before
         else:
@@ -106,8 +114,7 @@ class Player(pygame.sprite.Sprite, Character):
                     self.rect.x += self.move_list[Game.chara_no]
                     break
                 if Game.field.damage_collision():
-                    self.rect.x += self.move_list[Game.chara_no]
-                    Game.hp -= 10
+                    self.rect.x += 5
                     break
 
                 self.move_dx = self.x_before - self.rect.x
@@ -127,25 +134,41 @@ class Player(pygame.sprite.Sprite, Character):
         if self.rect.y > 704 or Game.hp <= 0:
             Game.is_gameover = True 
         
+        # 踏み攻撃
         if Game.field.step_on_collision():
-            
             Game.item += 50
-
+            
+        if Game.field.damage_collision():
+            Game.hp -= 10
+    
+        
+        # ダメージ音
+        if Game.se_flag == 1:
+            self.n1.play(0)
+            Game.se_flag = 0
+        if Game.se_flag == 2:
+            self.n2.play(0)
+            Game.se_flag = 0
+            
     # ジャンプ処理    
     def jump(self):
+        self.jump_coount += 1
         if self.landing:
-            if self.jump_coount < 6:
+            if self.jump_coount < 7:
                 self.rect.y -=self.jump_list1[Game.chara_no]
             elif self.jump_coount < 8:
                 self.rect.y -= self.jump_list2[Game.chara_no]
-            elif self.jump_coount < 11:
+            elif self.jump_coount < 10:
                 self.landing = False
-        if Game.field.damage_collision():
+        if Game.field.movement_collision():
             for i in range(10):
                 self.rect.y += 2
             self.landing = False
-            
-        self.jump_coount += 1
+             
+        # 天井 
+        if self.rect.y <= 5:
+            for _ in range(8):
+                self.rect.y -= 1
         
     # 重力処理  
     def apply_gravity(self):

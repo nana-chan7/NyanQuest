@@ -13,6 +13,7 @@ pygame.display.set_caption("***NYAN QUEST***")
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
+    Game.hp = 100
     Game.field = Filed(Filed.map_list[Game.map_no])
 
 # フォント    
@@ -93,7 +94,6 @@ def neko_gacha():
 
         return Game.chara_no
 
-
 # 音楽読み込み
 m1 = pygame.mixer.Sound("music/1.wav") 
 m1.set_volume(0.05)
@@ -101,8 +101,6 @@ m2 = pygame.mixer.Sound("music/2.wav")
 m2.set_volume(0.05)
 m3 = pygame.mixer.Sound("music/3.wav") 
 m3.set_volume(0.05)
-n1 = pygame.mixer.Sound("music/se/nakigoe1.wav")
-n2 = pygame.mixer.Sound("music/se/nakigoe2.wav")
 music_flag = 1
 
 # 画像読み込み
@@ -119,9 +117,7 @@ def main():
     
     while True:
         Game.surface.fill((0,0,0))
-        # game_music()    # 音楽再生
         Game.count += 1     # ゲームカウンタ
-        # Game.item = Game.count # アイテム 一旦
         Game.check_event()
         Game.move_flag = False
         global music_flag
@@ -219,17 +215,15 @@ def main():
                 if music_flag == 0:
                     m3.stop()
                     music_flag = 2
-
-            # video()
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
             if music_flag == 5:
-                pass
+                m2.play(-1)
+                music_flag = 0
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_okkey():
                 Game.is_gameover = False
-                pygame.mixer.stop()
                 main()
   
         pygame.display.update()
