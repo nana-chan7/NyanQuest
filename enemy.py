@@ -60,9 +60,11 @@ class Boss(pygame.sprite.Sprite, Character):
       
     # 更新処理            
     def update(self, x_shift):
+        self.rect.x += x_shift   
         self.set_enemy_animation(self.image_list)
-        self.rect.x += x_shift    
-# class Enemy(pygame.sprite.Sprite, Character):
+
+            
+# class Boss(pygame.sprite.Sprite, Character):
 #     def __init__(self, pos, size):
 #         # 敵1
 #         z_1 = pygame.image.load("enemy_images/1/1.png")

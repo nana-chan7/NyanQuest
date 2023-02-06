@@ -116,7 +116,18 @@ frame_img = pygame.image.load("bg_images/frame_img.png")
 retry_msg1 = msg_font.render("RESTART : PUSH ENTERKEY", True, (0,47,129))
 retry_msg2 = msg_font.render("RESTART : PUSH ENTERKEY", True, (205,220,233))
 retry_msg_list = [retry_msg1, retry_msg2]
-msg_count = 0
+clear_msg1 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (255,125,0))
+clear_msg2 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (25,203,138))
+clear_msg_list = [clear_msg1, clear_msg2]
+
+# メッセージ点滅
+def flash_masage(image_list,pos):
+    msg_count = 0
+    if Game.count % 50 == 0:
+        msg_count = 0
+    elif Game.count % 50 == 25:
+        msg_count = 1 
+    Game.surface.blit(image_list[msg_count], pos)
 
 # メイン処理
 def main():                 
@@ -128,7 +139,7 @@ def main():
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
-        global music_flag, msg_count
+        global music_flag
         Game.map = 0
         
         # タイトル画面
@@ -222,6 +233,7 @@ def main():
                     music_flag = 3
 
             if Game.is_clear:
+                Game.boss_flag = False
                 Game.phase = Phase.GAME_CLEAR
                 
         # ガチャ画面
@@ -248,14 +260,9 @@ def main():
             if music_flag == 5:
                 m2.play(-1)
                 music_flag = 0
-            Game.surface.blit(gameover_bg,(0,0))
-            if Game.count % 40 == 0:
-                msg_count = 0
-            elif Game.count % 40 == 25:
-                msg_count = 1
-            
-            Game.surface.blit(retry_msg_list[msg_count], [420,650])
-
+            Game.surface.blit(gameover_bg, (0,0))
+            flash_masage(retry_msg_list, [420,650])
+        
             if Game.on_okkey():
                 if music_flag == 0:
                     m2.stop()
@@ -264,7 +271,8 @@ def main():
                 
         # ゲームクリア
         elif Game.phase == Phase.GAME_CLEAR:
-            Game.surface.blit(gameclear_bg,(0,0))
+            Game.surface.blit(gameclear_bg, (0,0))
+            flash_masage(clear_msg_list, [380,650])
             if Game.on_okkey():
                 # if music_flag == 0:
                 #     m2.stop()

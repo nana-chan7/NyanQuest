@@ -121,13 +121,12 @@ class Filed:
         flag_boss = pygame.sprite.spritecollide(player, self.boss.sprites(), False)
         # ボスマップの時はゲームクリア
         if len(flag_boss) != 0: 
-            if Game.boss_map:
-                Game.is_clear = True
-            elif not Game.boss_flag:
+            # if Game.boss_map:
+            #     Game.is_clear = True
+            if not Game.boss_flag:
                 player.rect.x = 30
                 player.rect.y = 30
-                Game.boss_flag = True
-        
+                Game.boss_flag = True  
       
     # アタック判定          
     def step_on_collision(self):
@@ -174,7 +173,6 @@ class Filed:
                     
         self.tiles.draw(Game.surface)
         self.enemy.draw(Game.surface)
-        self.boss.draw(Game.surface)
         
         self.scroll_x() 
         
@@ -188,7 +186,7 @@ class Filed:
             for enemy in enemies:
                 enemy.kill() 
             
-        elif Game.boss_flag and not Game.is_clear:
+        elif Game.boss_flag and not Game.is_clear and not Game.boss_map:
             tiles = self.tiles.sprites()
             player = self.player.sprite
             enemies = self.enemy.sprites()
