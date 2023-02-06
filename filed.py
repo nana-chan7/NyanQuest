@@ -2,8 +2,7 @@ import pygame
 from tiles import Tile
 from player import Player, Atack
 from enemy import Enemy, Boss
-from game import Game, Phase
-
+from game import Game
 class Filed:
     def __init__(self,level_data): 
         
@@ -49,13 +48,11 @@ class Filed:
                 # 草ブロック
                 if cell == 4:
                     tile = Tile((x,y),Game.TILE_SIZE)
-                    self.tiles.add(tile)                    
-                    
+                    self.tiles.add(tile)                       
                 # プレイヤー
                 if cell == 9:
                     player_sprite = Player((x,y))
                     self.player.add(player_sprite)
-                    
                 # エネミーキャラ
                 Game.enemy_no = cell - 5
                 if cell == 5:
@@ -68,7 +65,7 @@ class Filed:
                 if cell == 7:
                     boss_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.boss.add(boss_sprite)  
-     
+                    
     
     # プレイヤーの移動による画面処理
     def scroll_x(self):

@@ -47,6 +47,7 @@ class Game:
     block_no = 0            # ブロック番号
     enemy_no = 0            # エネミーキャラ番号
     boss_flag = False       # ボスフラグ
+    boss_map = False
     
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号x 

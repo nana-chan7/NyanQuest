@@ -8,14 +8,13 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
-Game.field = Filed(Filed.map_list[0])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
-    # Game.field1 = Filed(Filed.map_list[1])
+    Game.field = Filed(Filed.map_list[Game.map_no])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
@@ -114,8 +113,8 @@ clear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
-retry_msg1 = msg_font.render("RETRY : PUSH ENTERKEY", True, (0,47,129))
-retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
+retry_msg1 = msg_font.render("RESTART : PUSH ENTERKEY", True, (0,47,129))
+retry_msg2 = msg_font.render("RESTART : PUSH ENTERKEY", True, (205,220,233))
 retry_msg_list = [retry_msg1, retry_msg2]
 msg_count = 0
 
@@ -195,13 +194,15 @@ def main():
                 if music_flag == 0:
                     m2.stop()
                     music_flag = 3
+                    
             # ボスマップへ
             elif Game.boss_flag:
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
                     music_flag = 4
-
+                    
+            # HPが０になったらゲームオーバー
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
                 if music_flag == 0:
@@ -210,9 +211,16 @@ def main():
 
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
+            Game.boss_map = True
             Game.surface.blit(boss_bg, (0, 0))
             if music_flag == 4:
                 pass
+            if Game.on_gkey():
+                Game.phase = Phase.GACHAGACHA
+                if music_flag == 0:
+                    m2.stop()
+                    music_flag = 3
+
             if Game.is_clear:
                 Game.phase = Phase.CLEAR
                 
@@ -226,10 +234,14 @@ def main():
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.print_flag = False
-                Game.phase = Phase.MAP
                 if music_flag == 0:
                     m3.stop()
                     music_flag = 2
+                # 元々いたマップに戻る
+                if Game.boss_map:
+                    Game.phase = Phase.BOSS
+                else:
+                    Game.phase = Phase.MAP
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
