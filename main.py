@@ -8,18 +8,19 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
+Game.field = Filed(Filed.map_list[0])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
-    Game.field = Filed(Filed.map_list[Game.map_no])
     # Game.field1 = Filed(Filed.map_list[1])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
-
+msg_font = pygame.font.Font("font/Ronde-B_square.otf", 45)   
+    
 # ガチャメッセージ・SE
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
@@ -36,7 +37,6 @@ gacha_neko5 = pygame.image.load("bg_images/gg5.png")
 g_list = [gacha_neko1, gacha_neko2, gacha_neko3, gacha_neko4, gacha_neko5]
 stop1 = 0
 stop2 = 0
-
 chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
@@ -110,7 +110,14 @@ start_bg = pygame.image.load("bg_images/start_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
 boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
+clear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
+frame_img = pygame.image.load("bg_images/frame_img.png")
+# メッセージ
+retry_msg1 = msg_font.render("RETRY : PUSH ENTERKEY", True, (0,47,129))
+retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
+retry_msg_list = [retry_msg1, retry_msg2]
+msg_count = 0
 
 # メイン処理
 def main():                 
@@ -122,7 +129,8 @@ def main():
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
-        global music_flag
+        global music_flag, msg_count
+        Game.map = 0
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
@@ -178,6 +186,9 @@ def main():
             Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
             # HP
             Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
+            # フレーム
+            Game.surface.blit(frame_img, (0, 0))
+            
             # ガチャ画面へ
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
@@ -186,7 +197,6 @@ def main():
                     music_flag = 3
             # ボスマップへ
             elif Game.boss_flag:
-                Game.map_no = 1
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
@@ -203,7 +213,8 @@ def main():
             Game.surface.blit(boss_bg, (0, 0))
             if music_flag == 4:
                 pass
-            Game.field.run()
+            if Game.is_clear:
+                Game.phase = Phase.CLEAR
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -226,10 +237,26 @@ def main():
                 m2.play(-1)
                 music_flag = 0
             Game.surface.blit(gameover_bg,(0,0))
+            if Game.count % 40 == 0:
+                msg_count = 0
+            elif Game.count % 40 == 25:
+                msg_count = 1
+            
+            Game.surface.blit(retry_msg_list[msg_count], [420,650])
+
             if Game.on_okkey():
                 if music_flag == 0:
                     m2.stop()
                 Game.is_gameover = False
+                main()
+                
+        # ゲームクリア
+        elif Game.phase == Phase.GAME_CLEAR:
+            Game.surface.blit(gameclear_bg,(0,0))
+            if Game.on_okkey():
+                # if music_flag == 0:
+                #     m2.stop()
+                Game.is_gameclear = False
                 main()
   
         pygame.display.update()

@@ -25,7 +25,6 @@ class Filed:
        Atack.containers = all
        Player.containers = all
        Enemy.containers = all, self.enemy
-
        self.boss = pygame.sprite.GroupSingle()      # map1ボス
 
        
@@ -53,7 +52,7 @@ class Filed:
                     self.tiles.add(tile)                    
                     
                 # プレイヤー
-                if cell == 22:
+                if cell == 9:
                     player_sprite = Player((x,y))
                     self.player.add(player_sprite)
                     
@@ -93,10 +92,7 @@ class Filed:
     # プレイヤーとブロックの当たり判定        
     def movement_collision(self):
         player = self.player.sprite
-        # flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
-        flag = pygame.sprite.spritecollide(player, self.tiles, False)
-        # if len(flag) != 0:
-        #     return True
+        flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
         if flag:
             oldrect = player.rect
             for tile in flag:        
@@ -146,7 +142,6 @@ class Filed:
         # プレイヤー
         self.player.update()
         self.player.draw(Game.surface)  
-
         # ブロック(タイル)
         if self.world_shift < 0:
             for i in range(-self.world_shift):
@@ -187,7 +182,7 @@ class Filed:
     [3,2,2,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0],
     [3,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,2,2,0,0,0],
     [3,0,0,0,0,0,1,2,0,0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0],
-    [3,0,22,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,0,7],
+    [3,0,9,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,0,7],
     [3,2,2,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,1,4],
     [3,0,0,0,1,5,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3],
     [3,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,0,3],

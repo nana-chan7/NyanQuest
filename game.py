@@ -17,6 +17,7 @@ class Game:
     phase = None            # フェーズ
     count = 0               # ゲームカウンタ
     is_gameover = False     # ゲームオーバーフラグ
+    is_clear = False        # ゲームクリアフラグ
     
     # タイマー処理
     count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
@@ -27,10 +28,10 @@ class Game:
     pic_chara = 0               # ピックキャラ
     anime_flag = False          # ガチャ回転中アニメーションフラグ
     print_flag = False          # 結果表示フラグ
-    command_able =True      # キー押下判定用フラグ
+    command_able =True          # キー押下判定用フラグ
     
     # プレイヤー(キャラクター)
-    player_pos = 0
+    player_pos = None
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
     hp_list = [100, 20, 40, 70]
@@ -51,8 +52,6 @@ class Game:
     enemy_count = 0       # エネミーキャラアニメーション番号x 
     
     # 雑多組
-    enemy_x, enemy_y = 0, 0
-    kill = False
     enemy_self = 0
     
     # イベントチェック処理
@@ -128,6 +127,7 @@ class Phase(Enum):
     BOSS = 30
     
     GACHAGACHA = 50      # ガチャ画面
-    GACHARESULT = 60      # ガチャ結果画面
+    # GACHARESULT = 60     # ガチャ結果画面
     
+    GAME_CLEAR = 77          # ゲームクリア
     GAME_OVER = 99      # ゲームオーバー
