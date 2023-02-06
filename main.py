@@ -230,11 +230,6 @@ def main():
                 if music_flag == 0:
                     m3.stop()
                     music_flag = 2
-
-        # ゲームクリア
-        elif Game.phase == Phase.GAME_CLEAR:
-            Game.surface.blit(gameclear_bg,(0,0))
-   
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
@@ -253,6 +248,15 @@ def main():
                 if music_flag == 0:
                     m2.stop()
                 Game.is_gameover = False
+                main()
+                
+        # ゲームクリア
+        elif Game.phase == Phase.GAME_CLEAR:
+            Game.surface.blit(gameclear_bg,(0,0))
+            if Game.on_okkey():
+                # if music_flag == 0:
+                #     m2.stop()
+                Game.is_gameclear = False
                 main()
   
         pygame.display.update()
