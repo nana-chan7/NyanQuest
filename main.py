@@ -114,9 +114,8 @@ key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
 retry_msg1 = msg_font.render("RETRY : PUSH ENTERKEY", True, (0,47,129))
-retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (116,144,167))
-retry_msg3 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
-retry_msg_list = [retry_msg1, retry_msg2, retry_msg3]
+retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
+retry_msg_list = [retry_msg1, retry_msg2]
 msg_count = 0
 
 # メイン処理
@@ -213,6 +212,8 @@ def main():
             Game.surface.blit(boss_bg, (0, 0))
             if music_flag == 4:
                 pass
+            if Game.is_clear:
+                Game.phase = Phase.CLEAR
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -228,6 +229,10 @@ def main():
                 if music_flag == 0:
                     m3.stop()
                     music_flag = 2
+
+        # ゲームクリア
+        elif Game.phase == Phase.GAME_CLEAR
+   
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
@@ -237,13 +242,9 @@ def main():
             Game.surface.blit(gameover_bg,(0,0))
             if Game.count % 40 == 0:
                 msg_count = 0
-            elif Game.count % 40 == 1:
+            elif Game.count % 40 == 25:
                 msg_count = 1
-            elif Game.count % 40 == 2:
-                msg_count = 2
-            elif Game.count % 40 == 3:
-                msg_count = 1
-                
+            
             Game.surface.blit(retry_msg_list[msg_count], [420,650])
 
             if Game.on_okkey():
