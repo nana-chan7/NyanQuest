@@ -2,8 +2,7 @@ import pygame
 from tiles import Tile
 from player import Player, Atack
 from enemy import Enemy, Boss
-from game import Game, Phase
-
+from game import Game
 class Filed:
     def __init__(self,level_data): 
         
@@ -16,6 +15,8 @@ class Filed:
 
     # マップ(フィールド全体)処理
     def setup_level(self, layout):
+       self.map = Game.map_no         # マップ番号(初期値は１)
+
        self.tiles = pygame.sprite.Group()           # ブロック タイル
        self.player = pygame.sprite.GroupSingle()    # プレイヤーキャラ
        
@@ -25,7 +26,8 @@ class Filed:
        Atack.containers = all
        Player.containers = all
        Enemy.containers = all, self.enemy
-       self.boss = pygame.sprite.GroupSingle()      # map1ボス
+       self.boss = pygame.sprite.GroupSingle()      
+       self.clear = False
 
        
        for row_index, row in enumerate(layout):
@@ -49,13 +51,11 @@ class Filed:
                 # 草ブロック
                 if cell == 4:
                     tile = Tile((x,y),Game.TILE_SIZE)
-                    self.tiles.add(tile)                    
-                    
+                    self.tiles.add(tile)                       
                 # プレイヤー
                 if cell == 9:
                     player_sprite = Player((x,y))
                     self.player.add(player_sprite)
-                    
                 # エネミーキャラ
                 Game.enemy_no = cell - 5
                 if cell == 5:
@@ -68,7 +68,7 @@ class Filed:
                 if cell == 7:
                     boss_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.boss.add(boss_sprite)  
-     
+                    
     
     # プレイヤーの移動による画面処理
     def scroll_x(self):
@@ -119,11 +119,14 @@ class Filed:
             return True
         # マップ1でボスに接触するとボスマップへ遷移 
         flag_boss = pygame.sprite.spritecollide(player, self.boss.sprites(), False)
-        if len(flag_boss) != 0:
-            player.rect.x = 30
-            player.rect.y = 30
-            # self.world_shift = 0
-            Game.boss_flag = True
+        # ボスマップの時はゲームクリア
+        if len(flag_boss) != 0: 
+            # if Game.boss_map:
+            #     Game.is_clear = True
+            if not Game.boss_flag:
+                player.rect.x = 30
+                player.rect.y = 30
+                Game.boss_flag = True  
       
     # アタック判定          
     def step_on_collision(self):
@@ -170,11 +173,35 @@ class Filed:
                     
         self.tiles.draw(Game.surface)
         self.enemy.draw(Game.surface)
-        self.boss.draw(Game.surface)
         
         self.scroll_x() 
+        
+        if Game.is_clear:
+            tiles = self.tiles.sprites()
+            player = self.player.sprite
+            enemies = self.enemy.sprites()
+            for tile in tiles:
+                tile.kill() 
+            player.kill()
+            for enemy in enemies:
+                enemy.kill() 
             
-
+        elif Game.boss_flag and not Game.is_clear and not Game.boss_map:
+            tiles = self.tiles.sprites()
+            player = self.player.sprite
+            enemies = self.enemy.sprites()
+            for tile in tiles:
+                tile.kill() 
+            player.kill()
+            for enemy in enemies:
+                enemy.kill() 
+            Game.map_no = 1
+            player.rect.x = 30
+            player.rect.y = 30
+            Game.boss_flag = False
+            self.setup_level(self.map2)
+            self.run()
+            
     # マップ(仮)
     map1 = [
     [4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -190,19 +217,17 @@ class Filed:
     [3,4,4,3,3,1,0,4,2,1,1,1,1,1,2,1,1,0,4,3,2,3,1,1,2,3,3,0,0,3]]
 
     map2 = [
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7],
-    [3,2,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,3,0,0,2,2,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,2,2,3,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,0,2,2,0,0,0,3,6,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,1,1,0,0,3,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,3,0,0,0,0,0,3,2,1,1,1,1,1,2,0,1,1,1,2,2,3,0,1,2,3,3,0,2,3,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
-
-
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0],
+    [3,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,2,2,0,0,0],
+    [3,0,0,0,0,0,1,2,0,0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0],
+    [3,0,9,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,0,7],
+    [3,2,2,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,1,4],
+    [3,0,0,0,1,5,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,3],
+    [3,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,5,0,3],
+    [3,5,0,1,5,0,0,0,0,0,0,0,0,0,0,0,5,0,0,4,0,0,0,0,0,1,1,2,0,3],
+    [3,4,4,3,3,1,0,4,2,1,1,1,1,1,2,1,1,0,4,3,2,3,1,1,2,3,3,0,0,3]]
 
     map_list = [map1,map2]
 

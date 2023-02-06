@@ -8,14 +8,13 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
-Game.field = Filed(Filed.map_list[0])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
-    # Game.field1 = Filed(Filed.map_list[1])
+    Game.field = Filed(Filed.map_list[Game.map_no])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
@@ -110,14 +109,25 @@ start_bg = pygame.image.load("bg_images/start_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
 boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
-clear_bg = pygame.image.load("bg_images/gameclear_img.png")
+gameclear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
-retry_msg1 = msg_font.render("RETRY : PUSH ENTERKEY", True, (0,47,129))
-retry_msg2 = msg_font.render("RETRY : PUSH ENTERKEY", True, (205,220,233))
+retry_msg1 = msg_font.render("RESTART : PUSH ENTERKEY", True, (0,47,129))
+retry_msg2 = msg_font.render("RESTART : PUSH ENTERKEY", True, (205,220,233))
 retry_msg_list = [retry_msg1, retry_msg2]
-msg_count = 0
+clear_msg1 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (255,125,0))
+clear_msg2 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (25,203,138))
+clear_msg_list = [clear_msg1, clear_msg2]
+
+# メッセージ点滅
+def flash_masage(image_list,pos):
+    msg_count = 0
+    if Game.count % 50 == 0:
+        msg_count = 0
+    elif Game.count % 50 == 25:
+        msg_count = 1 
+    Game.surface.blit(image_list[msg_count], pos)
 
 # メイン処理
 def main():                 
@@ -129,7 +139,7 @@ def main():
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
         Game.move_flag = False
-        global music_flag, msg_count
+        global music_flag
         Game.map = 0
         
         # タイトル画面
@@ -195,13 +205,15 @@ def main():
                 if music_flag == 0:
                     m2.stop()
                     music_flag = 3
+                    
             # ボスマップへ
             elif Game.boss_flag:
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
                     music_flag = 4
-
+                    
+            # HPが０になったらゲームオーバー
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
                 if music_flag == 0:
@@ -210,11 +222,19 @@ def main():
 
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
+            Game.boss_map = True
             Game.surface.blit(boss_bg, (0, 0))
             if music_flag == 4:
                 pass
+            if Game.on_gkey():
+                Game.phase = Phase.GACHAGACHA
+                if music_flag == 0:
+                    m2.stop()
+                    music_flag = 3
+
             if Game.is_clear:
-                Game.phase = Phase.CLEAR
+                Game.boss_flag = False
+                Game.phase = Phase.GAME_CLEAR
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
@@ -226,24 +246,23 @@ def main():
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.print_flag = False
-                Game.phase = Phase.MAP
                 if music_flag == 0:
                     m3.stop()
                     music_flag = 2
+                # 元々いたマップに戻る
+                if Game.boss_map:
+                    Game.phase = Phase.BOSS
+                else:
+                    Game.phase = Phase.MAP
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
             if music_flag == 5:
                 m2.play(-1)
                 music_flag = 0
-            Game.surface.blit(gameover_bg,(0,0))
-            if Game.count % 40 == 0:
-                msg_count = 0
-            elif Game.count % 40 == 25:
-                msg_count = 1
-            
-            Game.surface.blit(retry_msg_list[msg_count], [420,650])
-
+            Game.surface.blit(gameover_bg, (0,0))
+            flash_masage(retry_msg_list, [420,650])
+        
             if Game.on_okkey():
                 if music_flag == 0:
                     m2.stop()
@@ -252,7 +271,8 @@ def main():
                 
         # ゲームクリア
         elif Game.phase == Phase.GAME_CLEAR:
-            Game.surface.blit(gameclear_bg,(0,0))
+            Game.surface.blit(gameclear_bg, (0,0))
+            flash_masage(clear_msg_list, [380,650])
             if Game.on_okkey():
                 # if music_flag == 0:
                 #     m2.stop()
