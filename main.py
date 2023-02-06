@@ -8,13 +8,13 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
+Game.field = Filed(Filed.map_list[0])
 
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
-    Game.field = Filed(Filed.map_list[Game.map_no])
     # Game.field1 = Filed(Filed.map_list[1])
 
 # フォント    
@@ -111,6 +111,7 @@ map1_bg = pygame.image.load("bg_images/map1_img.png")
 boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
+frame_img = pygame.image.load("bg_images/frame_img.png")
 
 # メイン処理
 def main():                 
@@ -123,6 +124,7 @@ def main():
         Game.check_event()
         Game.move_flag = False
         global music_flag
+        Game.map = 0
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
@@ -178,6 +180,9 @@ def main():
             Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
             # HP
             Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
+            # フレーム
+            Game.surface.blit(frame_img, (0, 0))
+            
             # ガチャ画面へ
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
@@ -186,7 +191,7 @@ def main():
                     music_flag = 3
             # ボスマップへ
             elif Game.boss_flag:
-                Game.map_no = 1
+                Game.field = Filed(Filed.map_list[1])
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
