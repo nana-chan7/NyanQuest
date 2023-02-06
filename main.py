@@ -110,6 +110,7 @@ start_bg = pygame.image.load("bg_images/start_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
 boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
+clear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
@@ -231,7 +232,8 @@ def main():
                     music_flag = 2
 
         # ゲームクリア
-        elif Game.phase == Phase.GAME_CLEAR
+        elif Game.phase == Phase.GAME_CLEAR:
+            Game.surface.blit(gameclear_bg,(0,0))
    
    
         # ゲームオーバー           
