@@ -158,9 +158,7 @@ def main():
                     if music_flag == 0:
                         m1.stop()
                         music_flag = 2
-
-
-              
+  
         # マップ画面        
         elif Game.phase == Phase.MAP:
             if music_flag ==2:

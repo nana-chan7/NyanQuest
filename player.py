@@ -39,7 +39,6 @@ class Player(pygame.sprite.Sprite, Character):
         d_list = [d_1, d_2, d_3, d_4, d_5, d_6]
 
         super().__init__()
-        # self.chara_list = [self.list1, self.list2, self.list3, self.list4]
         self.chara_no = 0
         # キャラクター画像
         self.all_image_list = [a_list, b_list, c_list, d_list]
@@ -47,8 +46,8 @@ class Player(pygame.sprite.Sprite, Character):
         
         self.image = self.set_chara_animation(self.image_list)
         self.rect = self.image.get_rect(topleft=pos)
-        
-        self.player_attack_img = pygame.image.load("images/attack_star.png")
+        Game.player_pos = self.rect
+        # self.player_attack_img = pygame.image.load("images/attack_star.png")
         self.count = 0
         
         self.jump_coount = 0    # ジャンプカウンタ
@@ -90,8 +89,9 @@ class Player(pygame.sprite.Sprite, Character):
                     self.rect.x -= self.move_list[Game.chara_no]
                     break
                 if Game.field.damage_collision():
-                    self.rect.x -= self.move_list[Game.chara_no]
-                    self.hp -= 10
+                    self.rect.x -= self.move_list[Game.chara_no] + 10
+                    
+                    Game.hp -= 10
                     break
                 self.move_dx = self.rect.x - self.x_before
         else:
@@ -107,7 +107,7 @@ class Player(pygame.sprite.Sprite, Character):
                     break
                 if Game.field.damage_collision():
                     self.rect.x += self.move_list[Game.chara_no]
-                    self.hp -= 10
+                    Game.hp -= 10
                     break
 
                 self.move_dx = self.x_before - self.rect.x
@@ -123,11 +123,13 @@ class Player(pygame.sprite.Sprite, Character):
             self.apply_gravity()
             
             
-        # 画面外に落下した場合ゲームオーバー
+        # 画面外に落下するか、HPが０になった場合はゲームオーバー
         if self.rect.y > 704 or Game.hp <= 0:
             Game.is_gameover = True 
         
-        Game.hp = self.hp       # HP
+        if Game.field.step_on_collision():
+            
+            Game.item += 50
 
     # ジャンプ処理    
     def jump(self):
@@ -138,7 +140,7 @@ class Player(pygame.sprite.Sprite, Character):
                 self.rect.y -= self.jump_list2[Game.chara_no]
             elif self.jump_coount < 11:
                 self.landing = False
-        if Game.field.movement_collision():
+        if Game.field.damage_collision():
             for i in range(10):
                 self.rect.y += 2
             self.landing = False
@@ -154,31 +156,44 @@ class Player(pygame.sprite.Sprite, Character):
                 self.jump_coount = 0
                 self.rect.y -= 2
                 break
-            if Game.field.damage_collision():
+            if Game.field.step_on_collision():
                 self.landing = True # 着地したら
                 self.jump_coount = 0
                 self.rect.y -= 2
                 Game.kill = True
-                break
-
-    # 攻撃処理              
-    def player_attack(self):
-        r_atack_x, r_atack_y = self.rect.x + 70, self.rect.y + 10
-        l_atack_x, l_atack_y = self.rect.x-30, self.rect.y+10
-        if Game.on_ckey(): 
-            Game.surface.blit(self.player_attack_img,(r_atack_x, r_atack_y))
-        elif Game.on_xkey(): 
-            Game.surface.blit(self.player_attack_img,(l_atack_x, l_atack_y))
-        
-        # ダメージ判定
-        if Game.field.damage_collision():
-            self.hp_list[Game.chara_no] -= 10       
+                break  
     
     # 更新処理            
     def update(self):
         self.get_input() 
         self.change_image_list(self.all_image_list, Game.chara_no)
         self.set_chara_animation(self.image_list)
+
+class Atack(pygame.sprite.Sprite, Character):
+    def __init__(self, pos):
+        
+        atack1 = pygame.image.load("images/attack_star.png")
+        # atack_list = [atack1]
+        
+        super().__init__()
+
+        # アタック画像
+        self.alll_atack_list = [atack1]
+        self.image = self.alll_atack_list[Game.chara_no]
+        
+        self.rect = self.image.get_rect(topleft=pos)
+
+    # 攻撃処理              
+    def player_attack(self):
+        if Game.on_ckey(): 
+            self.rect.x = Game.player_pos.x + 20
+            self.rect.y = Game.player_pos.y + 20
+        elif Game.on_xkey(): 
+            self.rect.x = Game.player_pos.x - 20
+            self.rect.y = Game.player_pos.y - 20
+            
+    # 更新処理            
+    def update(self):
         self.player_attack()
 
         

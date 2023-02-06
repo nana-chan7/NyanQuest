@@ -1,6 +1,6 @@
 import pygame
 from tiles import Tile
-from player import Player, Atack
+from player import Player
 from enemy import Enemy, Boss
 from game import Game, Phase
 
@@ -18,13 +18,17 @@ class Filed:
     def setup_level(self, layout):
        self.tiles = pygame.sprite.Group()           # ブロック タイル
        self.player = pygame.sprite.GroupSingle()    # プレイヤーキャラ
-       
-       all = pygame.sprite.RenderUpdates()   # 描画グループ 仮↓
-       self.enemy = pygame.sprite.Group()    # 敵
-       self.atack = pygame.sprite.GroupSingle()
-       Atack.containers = all
-       Player.containers = all
-       Enemy.containers = all, self.enemy
+       self.enemy0 = pygame.sprite.GroupSingle()    # 敵0
+       self.enemy1 = pygame.sprite.GroupSingle()    # 敵1
+       self.enemy2 = pygame.sprite.GroupSingle()    # 敵2
+       self.enemy3 = pygame.sprite.GroupSingle()    # 敵3       
+       self.enemy4 = pygame.sprite.GroupSingle()    # 敵4
+       self.enemy5 = pygame.sprite.GroupSingle()    # 敵5
+       self.enemy6 = pygame.sprite.GroupSingle()    # 敵6
+       self.enemy7 = pygame.sprite.GroupSingle()    # 敵7
+       self.enemy8 = pygame.sprite.GroupSingle()    # 敵8
+       self.enemy9 = pygame.sprite.GroupSingle()    # 敵9       
+       self.enemy10 = pygame.sprite.GroupSingle()   # 敵10
 
        self.boss = pygame.sprite.GroupSingle()      # map1ボス
 
@@ -60,15 +64,39 @@ class Filed:
                 # エネミーキャラ
                 Game.enemy_no = cell - 5
                 if cell == 5:
-                    enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
-                    self.enemy.add(enemy_sprite)  
+                    enemy_sprite0 = Enemy((x,y))
+                    self.enemy0.add(enemy_sprite0)  
                 if cell == 6:
-                    enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
-                    self.enemy.add(enemy_sprite)  
-  
-                # map1 ボスキャラ遷移用
+                    enemy_sprite1 = Enemy((x,y))
+                    self.enemy1.add(enemy_sprite1)
                 if cell == 7:
-                    boss_sprite = Enemy((x,y),Game.TILE_SIZE)
+                    enemy_sprite2 = Enemy((x,y))
+                    self.enemy2.add(enemy_sprite2)  
+                if cell == 8:
+                    enemy_sprite3 = Enemy((x,y))
+                    self.enemy3.add(enemy_sprite3)
+                if cell == 9:
+                    enemy_sprite4 = Enemy((x,y))
+                    self.enemy4.add(enemy_sprite4)  
+                if cell == 10:
+                    enemy_sprite5 = Enemy((x,y))
+                    self.enemy5.add(enemy_sprite5)
+                if cell == 11:
+                    enemy_sprite6 = Enemy((x,y))
+                    self.enemy6.add(enemy_sprite6)  
+                if cell == 12:
+                    enemy_sprite7 = Enemy((x,y))
+                    self.enemy7.add(enemy_sprite7)
+                if cell == 13:
+                    enemy_sprite8 = Enemy((x,y))
+                    self.enemy8.add(enemy_sprite8)  
+                if cell == 14:
+                    enemy_sprite8 = Enemy((x,y))
+                    self.enemy8.add(enemy_sprite8)
+          
+                # ボスキャラ 遷移
+                if cell == 15:
+                    boss_sprite = Enemy((x,y))
                     self.boss.add(boss_sprite)
      
     
@@ -97,37 +125,58 @@ class Filed:
         flag = pygame.sprite.spritecollide(player, self.tiles.sprites(), False)
         if len(flag) != 0:
             return True
-        
+                
     def damage_collision(self):
         player = self.player.sprite
-        flag = pygame.sprite.spritecollide(player, self.enemy.sprites(), False)
-        if len(flag) != 0:
+        a_flag = pygame.sprite.spritecollide(player, self.enemy0, False)
+        b_flag = pygame.sprite.spritecollide(player, self.enemy1, False)
+        c_flag = pygame.sprite.spritecollide(player, self.enemy2, False)
+        d_flag = pygame.sprite.spritecollide(player, self.enemy3, False)
+        e_flag = pygame.sprite.spritecollide(player, self.enemy4, False)
+        f_flag = pygame.sprite.spritecollide(player, self.enemy5, False)
+        g_flag = pygame.sprite.spritecollide(player, self.enemy6, False)
+        h_flag = pygame.sprite.spritecollide(player, self.enemy7, False)
+        i_flag = pygame.sprite.spritecollide(player, self.enemy8, False)
+        j_flag = pygame.sprite.spritecollide(player, self.enemy9, False)
+        k_flag = pygame.sprite.spritecollide(player, self.enemy10, False)
+        if len(a_flag) != 0:
+            Game.enemy_self = 0
+            return True 
+        elif len(b_flag) != 0:
+            Game.enemy_self = 1
             return True
-            
-    # アタック・ダメージ            
-    def step_on_collision(self):
-        player = self.player.sprite
-        step_on_enemy = pygame.sprite.spritecollide(player, self.enemy, True)
-        if step_on_enemy:
-            oldrect = player.rect
-            for enemy in step_on_enemy:
-                # # 右から衝突
-                # if enemy.rect.left < oldrect.left < enemy.rect.right < oldrect.right:
-                #     return True
-                # # 左から衝突
-                # if oldrect.left < enemy.rect.left < oldrect.right < enemy.rect.right:
-                #     return True
-            # 上からは踏み攻撃 
-                if oldrect.top < enemy.rect.top < oldrect.bottom < enemy.rect.bottom:
-                    return True
-                    
-            
-        
+        elif len(c_flag) != 0:
+            Game.enemy_self = 23
+            return True
+        elif len(d_flag) != 0:
+            Game.enemy_self = 3
+            return True
+        elif len(e_flag) != 0:
+            Game.enemy_self = 4
+            return True
+        elif len(f_flag) != 0:
+            Game.enemy_self = 5
+            return True
+        elif len(g_flag) != 0:
+            Game.enemy_self = 6
+            return True
+        elif len(h_flag) != 0:
+            Game.enemy_self = 7
+            return True
+        elif len(i_flag) != 0:
+            Game.enemy_self = 8
+            return True
+        elif len(j_flag) != 0:
+            Game.enemy_self = 9
+            return True
+        elif len(k_flag) != 0:
+            Game.enemy_self = 10
+            return True
+                
     def run(self):
         # プレイヤー
         self.player.update()
         self.player.draw(Game.surface)  
-
         
         # ブロック(タイル)
         if self.world_shift < 0:
@@ -153,8 +202,28 @@ class Filed:
      
         
         # 敵
-        self.enemy.update(self.world_shift)
-        self.enemy.draw(Game.surface)
+        self.enemy0.update(self.world_shift)
+        self.enemy0.draw(Game.surface)
+        self.enemy1.update(self.world_shift)
+        self.enemy1.draw(Game.surface)
+        self.enemy2.update(self.world_shift)
+        self.enemy2.draw(Game.surface)
+        self.enemy3.update(self.world_shift)
+        self.enemy3.draw(Game.surface)
+        self.enemy4.update(self.world_shift)
+        self.enemy4.draw(Game.surface)
+        self.enemy5.update(self.world_shift)
+        self.enemy5.draw(Game.surface)
+        self.enemy6.update(self.world_shift)
+        self.enemy6.draw(Game.surface)
+        self.enemy7.update(self.world_shift)
+        self.enemy7.draw(Game.surface)
+        self.enemy8.update(self.world_shift)
+        self.enemy8.draw(Game.surface)
+        self.enemy9.update(self.world_shift)
+        self.enemy9.draw(Game.surface)
+        self.enemy10.update(self.world_shift)
+        self.enemy10.draw(Game.surface)
         self.boss.update(self.world_shift)
         self.boss.draw(Game.surface)
         # self.enemies = [self.enemy0,self.enemy1,self.enemy2,self.enemy3,self.enemy4,self.enemy5,
@@ -168,15 +237,15 @@ class Filed:
     # マップ(仮)
     map1 = [
     [4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [3,5,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-    [3,2,2,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0],
-    [3,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,2,2,0,0,0],
+    [3,6,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+    [3,2,2,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0],
+    [3,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,1,0,0,9,0,0,0,1,1,2,2,0,0,0],
     [3,0,0,0,0,0,1,2,0,0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0],
-    [3,0,22,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,5,0,0,0,7],
+    [3,0,22,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,7,0,0,0,15],
     [3,2,2,0,0,0,0,1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,2,4],
-    [3,0,0,0,1,5,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
-    [3,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,3],
-    [3,5,0,1,5,0,0,0,0,0,0,0,0,0,0,0,5,0,0,4,0,0,0,0,0,1,1,2,0,3],
+    [3,0,0,0,1,8,1,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3],
+    [3,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,0,3],
+    [3,11,0,1,4,0,0,0,0,0,0,0,0,0,0,0,12,0,0,4,0,0,0,0,0,1,1,2,0,3],
     [3,4,4,3,3,1,0,4,2,1,1,1,1,1,2,1,1,0,4,3,2,3,1,1,2,3,3,0,0,3]]
 
     map2 = [

@@ -29,6 +29,7 @@ class Game:
     command_able =True      # キー押下判定用フラグ
     
     # プレイヤー(キャラクター)
+    player_pos = 0
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
     hp_list = [100, 20, 40, 70]
