@@ -14,16 +14,30 @@ def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
+    Game.item = 0
     Game.field = Filed(Filed.map_list[Game.map_no])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
 msg_font = pygame.font.Font("font/Ronde-B_square.otf", 45)   
+
+# メッセージ点滅
+def flash_masage(image_list,pos):
+    msg_count = 0
+    if Game.count % 50 <= 24:
+        msg_count = 0
+    elif Game.count % 50 <= 49:
+        msg_count = 1 
+    Game.surface.blit(image_list[msg_count], pos)
     
 # ガチャメッセージ・SE
+not_gacha_flag = False
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
+map_return_msg1 = msg_font.render("RETURN MAP : R-KEY", True, (255,0,0))
+map_return_msg2 = msg_font.render("RETURN MAP : R-KEY", True, (255,187,189))
+map_return_msg_list = [map_return_msg1, map_return_msg2]
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 
 # ガチャ画像
@@ -43,7 +57,7 @@ chara3 = pygame.image.load("chara_images/gacha/3.png")
 # ガチャ処理
 def neko_gacha():
     count = 0
-    global stop1, stop2
+    global stop1, stop2, not_gacha_flag
     pos = (350,200)
     # 確率
     prob = [0.3, 0.8, 0.6, 0.5] 
@@ -51,27 +65,30 @@ def neko_gacha():
     PIC = 1
     obtain_cara = None
     chara_list = [chara0, chara1, chara2, chara3]
-    #Game.gacha_count += 1
+    if Game.item >= 50:
+        not_gacha_flag = False
+    
     # 所持アイテムが50以下だったら
-    if Game.item < 50:
+    if not_gacha_flag:
         Game.gacha = False
-        Game.surface.fill((255,255,255))
-        Game.surface.blit(gacha_error_msg, [15,300]) 
-        #Game.gacha_count = 0
+        Game.surface.fill((248,0,0))
+        pygame.draw.rect(Game.surface, (255,255,255), (30,30,1140,644))
+        Game.surface.blit(gacha_error_msg, [20,300]) 
+        flash_masage(map_return_msg_list, [400,500])
          
     # 所持アイテムが50以上だったらガチャを回す
-    elif Game.item >= 50:
+    elif not_gacha_flag == False:
+        stop2 += 1
         Game.gacha = True
-        if Game.gacha:
-            if Game.on_okkey():
-                # Game.print_flag = False
-                stop2 = 0
-                #Game.gacha_count += 1
-                obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
-                Game.pic_chara = obtain_cara[0]
-                Game.chara_no = chara_list.index(Game.pic_chara) 
-                Game.anime_flag = True 
-                Game.item -= 50     # アイテムを消費
+        if stop2 >= 20:
+            if Game.gacha:
+                if Game.on_okkey():
+                    stop2 = 0
+                    obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
+                    Game.pic_chara = obtain_cara[0]
+                    Game.chara_no = chara_list.index(Game.pic_chara) 
+                    Game.anime_flag = True 
+                    stop2 = 0
                      
         if Game.anime_flag:
             count = Game.count % 10
@@ -89,8 +106,21 @@ def neko_gacha():
             Game.surface.fill((0,50,100))
             Game.surface.blit(gacha_pic_msg, [100,50])
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
+            if stop2 >= 100:
+                stop1 += 1
+                Game.item -= 50     # アイテムを消費
             if Game.item >= 50 and stop2 >= 20:
                 Game.surface.blit(gacha_msg, [15,500])
+                if stop1 >= 30:
+                    stop1 = 0
+                    not_gacha_flag = False
+            if Game.item < 50:
+                if Game.on_okkey():
+                    if stop1 >= 30:
+                        stop1 = 0
+                        not_gacha_flag = True
+ 
+            
 
         return Game.chara_no
 
@@ -113,21 +143,15 @@ gameclear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
+title_msg1 = msg_font.render("START : PUSH ENTERKEY", True, (255,125,0))
+title_msg2 = msg_font.render("START : PUSH ENTERKEY", True, (25,203,138))
+title_msg_list = [title_msg1, title_msg2]
 retry_msg1 = msg_font.render("RESTART : PUSH ENTERKEY", True, (0,47,129))
 retry_msg2 = msg_font.render("RESTART : PUSH ENTERKEY", True, (205,220,233))
 retry_msg_list = [retry_msg1, retry_msg2]
 clear_msg1 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (255,125,0))
 clear_msg2 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (25,203,138))
 clear_msg_list = [clear_msg1, clear_msg2]
-
-# メッセージ点滅
-def flash_masage(image_list,pos):
-    msg_count = 0
-    if Game.count % 50 == 0:
-        msg_count = 0
-    elif Game.count % 50 == 25:
-        msg_count = 1 
-    Game.surface.blit(image_list[msg_count], pos)
 
 # メイン処理
 def main():                 
@@ -148,6 +172,7 @@ def main():
                 m1.play(-1)
                 music_flag = 0
             Game.surface.blit(title_bg,(0,0))
+            flash_masage(title_msg_list, [400,550])
             if Game.on_okkey():
                 Game.phase = Phase.START
 
@@ -190,14 +215,15 @@ def main():
             Game.surface.blit(map1_bg, (0, 0))
             # マップ表示
             Game.field.run()
+            # フレーム
+            Game.surface.blit(frame_img, (0, 0))
+
             # 操作方法表示
             Game.surface.blit(key_menu_img,(1000,10))
             # アイテムカウンタ
             Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
             # HP
             Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
-            # フレーム
-            Game.surface.blit(frame_img, (0, 0))
             
             # ガチャ画面へ
             if Game.on_gkey():

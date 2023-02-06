@@ -47,21 +47,21 @@ class Enemy(pygame.sprite.Sprite, Character):
         self.rect.x += x_shift   
             
         
-class Boss(pygame.sprite.Sprite, Character):
-    def __init__(self, pos, size):
+# class Boss(pygame.sprite.Sprite, Character):
+#     def __init__(self, pos, size):
        
-        boss1 = pygame.image.load("enemy_images/3/1.png")
-        boss2 = pygame.image.load("enemy_images/3/2.png")
-        self.image_list = [boss1, boss2]
+#         boss1 = pygame.image.load("enemy_images/3/1.png")
+#         boss2 = pygame.image.load("enemy_images/3/2.png")
+#         self.image_list = [boss1, boss2]
 
-        super().__init__()  
-        self.image = self.set_enemy_animation(self.image_list)
-        self.rect = self.image.get_rect(topleft=pos)
+#         super().__init__()  
+#         self.image = self.set_enemy_animation(self.image_list)
+#         self.rect = self.image.get_rect(topleft=pos)
       
-    # 更新処理            
-    def update(self, x_shift):
-        self.rect.x += x_shift   
-        self.set_enemy_animation(self.image_list)
+#     # 更新処理            
+#     def update(self, x_shift):
+#         self.rect.x += x_shift   
+#         self.set_enemy_animation(self.image_list)
 
             
 # class Boss(pygame.sprite.Sprite, Character):
