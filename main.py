@@ -109,7 +109,7 @@ start_bg = pygame.image.load("bg_images/start_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
 boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
-clear_bg = pygame.image.load("bg_images/gameclear_img.png")
+gameclear_bg = pygame.image.load("bg_images/gameclear_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 frame_img = pygame.image.load("bg_images/frame_img.png")
 # メッセージ
@@ -222,7 +222,7 @@ def main():
                     music_flag = 3
 
             if Game.is_clear:
-                Game.phase = Phase.CLEAR
+                Game.phase = Phase.GAME_CLEAR
                 
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
