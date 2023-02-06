@@ -12,6 +12,7 @@ class Game:
     # クラス変数
     keymap = []             # キーマップ
     field = None            # フィールド
+    field1 = None
     surface = None          # 描画
     phase = None            # フェーズ
     count = 0               # ゲームカウンタ

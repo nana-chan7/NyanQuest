@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite, Character):
         Game.move_flag = True
         self.move_dx = 0
         self.x_before = self.rect.x
-        Game.field.movement_collision()
+        # Game.field.movement_collision()
 
         # 右移動
         if Game.on_rightkey():
@@ -99,7 +99,7 @@ class Player(pygame.sprite.Sprite, Character):
                     self.rect.x -= self.move_list[Game.chara_no]
                     break
                 if Game.field.damage_collision():
-                    self.rect.x -= 5
+                    self.rect.x -= self.move_list[Game.chara_no]
                     break
                 self.move_dx = self.rect.x - self.x_before
         else:
@@ -114,7 +114,7 @@ class Player(pygame.sprite.Sprite, Character):
                     self.rect.x += self.move_list[Game.chara_no]
                     break
                 if Game.field.damage_collision():
-                    self.rect.x += 5
+                    self.rect.x += self.move_list[Game.chara_no]
                     break
 
                 self.move_dx = self.x_before - self.rect.x

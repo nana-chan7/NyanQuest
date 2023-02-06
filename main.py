@@ -15,6 +15,7 @@ def init_game_info():
     Game.phase = Phase.TITLE
     Game.hp = 100
     Game.field = Filed(Filed.map_list[Game.map_no])
+    # Game.field1 = Filed(Filed.map_list[1])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
@@ -67,11 +68,11 @@ def neko_gacha():
                 # Game.print_flag = False
                 stop2 = 0
                 #Game.gacha_count += 1
-                Game.item -= 50     # アイテムを消費
                 obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
                 Game.pic_chara = obtain_cara[0]
                 Game.chara_no = chara_list.index(Game.pic_chara) 
                 Game.anime_flag = True 
+                Game.item -= 50     # アイテムを消費
                      
         if Game.anime_flag:
             count = Game.count % 10
@@ -107,6 +108,7 @@ music_flag = 1
 title_bg = pygame.image.load("bg_images/title_img.png")
 start_bg = pygame.image.load("bg_images/start_img.png")
 map1_bg = pygame.image.load("bg_images/map1_img.png")
+boss_bg = pygame.image.load("bg_images/boss_stage_img.png")
 gameover_bg = pygame.image.load("bg_images/gameover_img.png")
 key_menu_img = pygame.image.load("bg_images/key_menu_img.png")
 
@@ -160,7 +162,7 @@ def main():
             if music_flag ==2:
                 m2.play(-1)
                 music_flag = 0
-            Game.surface.blit(gacha_bg,(0,0))
+            # Game.surface.blit(gacha_bg,(0,0))
             if Game.count % 5 == 0:
                 Game.player_count += 1
             if Game.count % 9 == 0:
@@ -184,6 +186,8 @@ def main():
                     music_flag = 3
             # ボスマップへ
             elif Game.boss_flag:
+                Game.map_no = 1
+                Game.phase = Phase.BOSS
                 if music_flag == 0:
                     m2.stop()
                     music_flag = 4
@@ -196,9 +200,9 @@ def main():
 
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
-            if music_flag == 5:
+            Game.surface.blit(boss_bg, (0, 0))
+            if music_flag == 4:
                 pass
-            Game.map_no = 1
             Game.field.run()
                 
         # ガチャ画面
@@ -223,6 +227,8 @@ def main():
                 music_flag = 0
             Game.surface.blit(gameover_bg,(0,0))
             if Game.on_okkey():
+                if music_flag == 0:
+                    m2.stop()
                 Game.is_gameover = False
                 main()
   
