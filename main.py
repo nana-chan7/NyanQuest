@@ -9,13 +9,15 @@ clock = pygame.time.Clock()
 Game.surface = pygame.display.set_mode((Game.SCREEN_WIDTH,Game.SCREEN_HEIGHT))
 pygame.display.set_caption("***NYAN QUEST***")
 
+
 # ゲームの初期化処理
 def init_game_info():
     Game.is_gameover = False
     Game.phase = Phase.TITLE
     Game.hp = 100
     Game.item = 0
-    Game.field = Filed(Filed.map_list[Game.map_no])
+    Game.field = Filed(Filed.map_list[0])
+    Game.field1 = Filed(Filed.map_list[1])
 
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
@@ -168,6 +170,7 @@ def main():
     init_game_info() 
     
     while True:
+        
         Game.surface.fill((0,0,0))
         Game.count += 1     # ゲームカウンタ
         Game.check_event()
@@ -208,7 +211,6 @@ def main():
                     Game.phase = Phase.MAP 
                     Game.move_flag = True
     
-  
         # マップ画面        
         elif Game.phase == Phase.MAP:
             if music_flag ==2:
@@ -222,6 +224,7 @@ def main():
                 Game.enemy_count += 1
             Game.surface.fill((128,224,235))
             # 背景
+            if Game.boss
             Game.surface.blit(map1_bg, (0, 0))
             # マップ表示
             Game.field.run()
@@ -242,6 +245,8 @@ def main():
             if Game.se_flag == 3:
                 se3.play(0)
                 Game.se_flag = 0
+            if music_flag == 4:
+                music_flag = 0
                 
             
             # ガチャ画面へ
@@ -253,14 +258,7 @@ def main():
                 if music_flag == 0:
                     map_bgm.stop()
                     music_flag = 3
-                    
-            # ボスマップへ
-            elif Game.boss_flag:
-                Game.phase = Phase.BOSS
-                if music_flag == 0:
-                    map_bgm.stop()
-                    music_flag = 4
-                    
+            
             # HPが０になったらゲームオーバー
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
@@ -269,19 +267,6 @@ def main():
                     Game.se_flag = 9
                     music_flag = 9
 
-        # ボスマップ画面
-        if Game.phase == Phase.BOSS:
-            Game.boss_flag = False
-            Game.boss_map = True
-            Game.surface.blit(boss_bg, (0, 0))
-            Game.filed.run()
-            if music_flag == 4:
-                pass
-            if Game.on_gkey():
-                Game.phase = Phase.GACHAGACHA
-                if music_flag == 0:
-                    
-                    music_flag = 3
 
             if Game.is_clear:
                 Game.boss_flag = False
