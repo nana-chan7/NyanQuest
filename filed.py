@@ -1,36 +1,29 @@
 import pygame
 from tiles import Tile
 from player import Player
-from enemy import Enemy
-# from enemy import Enemy, Boss
-from game import Game
+from enemy import Enemy, Boss
+from game import Game, Phase
 class Filed:
-
     def __init__(self,level_data): 
-        
         # セットアップ
         self.setup_level(level_data)
         self.world_shift = 0    # 移動→背景も動くための ブロック タイル
         self.current_x = 0
-        
         self.map = Game.map_no         # マップ番号(初期値は１)
-        self.clear = False       # クリア判定
+        self.clear = False             # クリア判定
         
     # マップ(フィールド全体)処理
     def setup_level(self, layout):
        self.map = Game.map_no         # マップ番号(初期値は１)
-
        self.tiles = pygame.sprite.Group()           # ブロック タイル
        self.player = pygame.sprite.GroupSingle()    # プレイヤーキャラ
-       
        all = pygame.sprite.RenderUpdates()   
        self.enemy = pygame.sprite.Group()           # 敵
+       self.next = pygame.sprite.GroupSingle() 
+       self.boss = pygame.sprite.GroupSingle() 
        Player.containers = all
        Enemy.containers = all, self.enemy
-       self.boss = pygame.sprite.GroupSingle()      
-       
-       
-       
+
        for row_index, row in enumerate(layout):
            for col_index, cell in enumerate(row):
                 x = col_index * Game.TILE_SIZE
@@ -54,7 +47,7 @@ class Filed:
                     tile = Tile((x,y),Game.TILE_SIZE)
                     self.tiles.add(tile)                       
                 # プレイヤー
-                if cell == 9:
+                if cell == 22:
                     player_sprite = Player((x,y))
                     self.player.add(player_sprite)
                 # エネミーキャラ
@@ -65,12 +58,25 @@ class Filed:
                 if cell == 6:
                     enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
                     self.enemy.add(enemy_sprite)  
-                # map1 ボスキャラ遷移用
+                # map1 遷移用
                 if cell == 7:
-                    boss_sprite = Enemy((x,y),Game.TILE_SIZE)
+                    enemy_sprite = Enemy((x,y),Game.TILE_SIZE)
+                    self.next.add(enemy_sprite)  
+                # ボス
+                Game.boss_no = cell - 8
+                if cell == 8:
+                    boss_sprite = Boss((x,y),Game.TILE_SIZE)
+                    self.boss.add(boss_sprite)  
+                if cell == 9:
+                    boss_sprite = Boss((x,y),Game.TILE_SIZE)
+                    self.boss.add(boss_sprite)  
+                if cell == 10:
+                    boss_sprite = Boss((x,y),Game.TILE_SIZE)
+                    self.boss.add(boss_sprite)  
+                if cell == 11:
+                    boss_sprite = Boss((x,y),Game.TILE_SIZE)
                     self.boss.add(boss_sprite)  
                     
-    
     # プレイヤーの移動による画面処理
     def scroll_x(self):
         player = self.player.sprite
@@ -118,13 +124,10 @@ class Filed:
             Game.se_flag = 3
             Game.hp -= 5
             return True
-        # マップ1でボスに接触するとボスマップへ遷移 
-        flag_boss = pygame.sprite.spritecollide(player, self.boss.sprites(), False)
-        # ボスマップの時はゲームクリア
-        if len(flag_boss) != 0: 
+        # マップ1で看板に接触するとボスマップへ遷移 
+        flag_next = pygame.sprite.spritecollide(player, self.next.sprites(), False)
+        if len(flag_next) != 0: 
             Game.se_flag = 3
-            # if Game.boss_map:
-            #     Game.is_clear = True
             if not Game.boss_flag:
                 player.rect.x = 30
                 player.rect.y = 30
@@ -153,11 +156,11 @@ class Filed:
             for i in range(-self.world_shift):
                 self.tiles.update(-1)
                 self.enemy.update(-1)
-                self.boss.update(-1)
+                self.next.update(-1)
                 if self.movement_collision():
                     self.tiles.update(1)
                     self.enemy.update(1)
-                    self.boss.update(1)
+                    self.next.update(1)
                     break
                 else:
                     self.player.sprite.rect.x -= 1
@@ -165,17 +168,18 @@ class Filed:
             for e in range(self.world_shift):
                 self.tiles.update(1)
                 self.enemy.update(1)
-                self.boss.update(1)
+                self.next.update(1)
                 if self.movement_collision():
                     self.tiles.update(-1)
                     self.enemy.update(-1)
-                    self.boss.update(-1)
+                    self.next.update(-1)
                     break
                 else:
                     self.player.sprite.rect.x += 1
                     
         self.tiles.draw(Game.surface)
         self.enemy.draw(Game.surface)
+        self.next.draw(Game.surface)
         
         self.scroll_x() 
         
@@ -202,9 +206,10 @@ class Filed:
             Game.map_no = 1
             player.rect.x = 30
             player.rect.y = 30
-            Game.boss_flag = False
             self.setup_level(self.map2)
-            self.run()
+            Game.phase = Phase.BOSS
+
+            # self.run()
             
     # マップ(仮)
     map1 = [
@@ -213,7 +218,7 @@ class Filed:
     [3,6,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,1,0,2,2,2,0,0,0,0,0,6,3],
     [3,2,0,0,0,0,5,0,1,2,2,0,5,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,2,3],
     [3,0,0,0,1,2,2,0,0,0,0,0,2,2,2,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0],
-    [3,0,9,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,7],
+    [3,0,22,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,7],
     [3,2,1,0,0,0,0,0,0,0,0,0,0,0,5,0,0,1,1,0,0,0,0,0,1,1,0,0,1,4],
     [3,0,0,0,2,2,6,0,0,0,0,0,0,2,2,1,0,0,0,0,5,0,0,0,0,0,0,2,0,3],
     [3,0,0,0,0,0,2,0,0,1,5,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0,0,0,0,3],
@@ -225,8 +230,8 @@ class Filed:
     [3,0,0,0,1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,3],
     [3,6,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,1,0,2,2,2,0,0,0,0,0,6,3],
     [3,2,0,0,0,0,5,0,1,2,2,0,5,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,2,3],
-    [3,0,0,0,1,2,2,0,0,0,0,0,2,2,2,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0],
-    [3,0,9,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,7],
+    [3,0,0,0,1,2,2,0,0,0,0,0,2,2,2,1,0,0,0,0,1,1,0,0,0,0,0,0,8,9],
+    [3,0,22,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,10,11],
     [3,2,1,0,0,0,0,0,0,0,0,0,0,0,5,0,0,1,1,0,0,0,0,0,1,1,0,0,1,4],
     [3,0,0,0,2,2,6,0,0,0,0,0,0,2,2,1,0,0,0,0,5,0,0,0,0,0,0,2,0,3],
     [3,0,0,0,0,0,2,0,0,1,5,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0,0,0,0,3],

@@ -218,6 +218,8 @@ def main():
                 Game.player_count += 1
             if Game.count % 9 == 0:
                 Game.enemy_count += 1
+            if Game.count % 9 == 0:
+                Game.enemy_count += 1
             Game.surface.fill((128,224,235))
             # 背景
             Game.surface.blit(map1_bg, (0, 0))
@@ -269,14 +271,16 @@ def main():
 
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
+            Game.boss_flag = False
             Game.boss_map = True
             Game.surface.blit(boss_bg, (0, 0))
+            Game.filed.run()
             if music_flag == 4:
                 pass
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 if music_flag == 0:
-                    m2.stop()
+                    
                     music_flag = 3
 
             if Game.is_clear:

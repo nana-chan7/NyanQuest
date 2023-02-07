@@ -46,11 +46,13 @@ class Game:
     move_flag = True        # 移動可能フラグ
     block_no = 0            # ブロック番号
     enemy_no = 0            # エネミーキャラ番号
+    boss_no = 0
     boss_flag = False       # ボスフラグ
     boss_map = False
     
     player_count = 0      # プレイヤーキャラアニメーション番号
-    enemy_count = 0       # エネミーキャラアニメーション番号x 
+    enemy_count = 0       # エネミーキャラアニメーション番号
+    boss_count = 0        # ボスキャラアニメーション番号
     
     # 雑多組
     enemy_self = 0
