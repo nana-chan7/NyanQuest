@@ -318,6 +318,8 @@ def main():
             if music_flag == 4:
                 boss_bgm.play(-1)
                 music_flag = 0
+            if Game.hp <= 0:
+                Game.is_gameover = Ture
 
             Game.surface.fill((191,104,98))
             Game.surface.blit(map1_bg, (0, 0))
@@ -348,9 +350,15 @@ def main():
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
                 if music_flag == 0:
-                    
+                    boss_bgm.stop()
                     music_flag = 3
-
+            if Game.is_gameover:
+                if music_flag ==0:
+                    boss_bgm.stop()
+                    music_flag = 9
+                    Game.se_flag = 9
+                Game.phase = Phase.GAME_OVER
+            
             if Game.is_clear:
                 Game.boss_flag = False
                 Game.phase = Phase.GAME_CLEAR

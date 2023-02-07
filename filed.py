@@ -12,20 +12,20 @@ class Filed:
         self.map = Game.map_no         # マップ番号(初期値は１)
         self.flag = False
         
-    
     # マップ(フィールド全体)処理
     def setup_level(self, layout):
-       self.map = Game.map_no         # マップ番号(初期値は１)
-       self.tiles = pygame.sprite.Group()           # ブロック タイル
-       self.player = pygame.sprite.GroupSingle()    # プレイヤーキャラ
-       all = pygame.sprite.RenderUpdates()   
-       self.enemy = pygame.sprite.Group()           # 敵
-       self.next = pygame.sprite.GroupSingle() 
-       self.boss = pygame.sprite.GroupSingle() 
-       Player.containers = all
-       Enemy.containers = all, self.enemy
-
-       for row_index, row in enumerate(layout):
+        self.map = Game.map_no         # マップ番号(初期値は１)
+        self.tiles = pygame.sprite.Group()           # ブロック タイル
+        self.player = pygame.sprite.GroupSingle()    # プレイヤーキャラ
+        all = pygame.sprite.RenderUpdates()   
+        self.enemy = pygame.sprite.Group()           # 敵
+        self.next = pygame.sprite.GroupSingle() 
+        self.boss = pygame.sprite.GroupSingle() 
+        Player.containers = all
+        Enemy.containers = all, self.enemy
+        Boss.containers = all, self.boss
+        
+        for row_index, row in enumerate(layout):
            for col_index, cell in enumerate(row):
                 x = col_index * Game.TILE_SIZE
                 y = row_index * Game.TILE_SIZE
@@ -78,7 +78,7 @@ class Filed:
                     boss_sprite = Boss((x,y),Game.TILE_SIZE)
                     self.boss.add(boss_sprite)  
                     
-        Filed.game_over_judge()
+       
         
     # ゲームオーバー判定
     def game_over_judge(self):

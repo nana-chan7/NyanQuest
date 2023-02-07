@@ -107,9 +107,9 @@ class Game:
     @classmethod
     def on_returnkey(cls):
         return K_r in Game.keymap
-    # 仮用
+    # ショートカット用
     @classmethod
-    def on_0key(cls):
+    def on_skey(cls):
         return K_0 in Game.keymap
     # 攻撃 右方向
     @classmethod
