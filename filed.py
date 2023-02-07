@@ -12,6 +12,15 @@ class Filed:
         self.map = Game.map_no         # マップ番号(初期値は１)
         self.flag = False
         
+    # ゲームオーバー判定
+    def game_over_judge(self):
+        player = self.player.sprite
+        # 画面外に落下するか、HPが０になった場合はゲームオーバー        
+        if player.rect.y > 704:
+            Game.is_gameover = True 
+        if Game.hp <= 0:
+            Game.is_gameover = True 
+    
     # マップ(フィールド全体)処理
     def setup_level(self, layout):
        self.map = Game.map_no         # マップ番号(初期値は１)
@@ -76,6 +85,7 @@ class Filed:
                 if cell == 11:
                     boss_sprite = Boss((x,y),Game.TILE_SIZE)
                     self.boss.add(boss_sprite)  
+                    
         self.game_over_judge()
             
         
@@ -158,14 +168,6 @@ class Filed:
                 if Game.atack_count >= 5:
                     Game.is_clear = True
                     Game.atack_count = 0
-    # ゲームオーバー
-    def game_over_judge(self):
-        player = self.player.sprite
-        # 画面外に落下するか、HPが０になった場合はゲームオーバー        
-        if player.rect.y > 704:
-            Game.is_gameover = True 
-        if Game.hp <= 0:
-            Game.is_gameover = True 
 
     # ボスマップへ    
     def next_map(self):
