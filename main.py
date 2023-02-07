@@ -31,7 +31,7 @@ def flash_masage(image_list,pos):
     Game.surface.blit(image_list[msg_count], pos)
     
 # ガチャメッセージ・SE
-not_gacha_flag = False
+not_gacha_flag = True
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
@@ -78,6 +78,7 @@ def neko_gacha():
          
     # 所持アイテムが50以上だったらガチャを回す
     elif not_gacha_flag == False:
+        Game.se_flag = 4
         stop2 += 1
         Game.gacha = True
         if stop2 >= 20:
@@ -87,57 +88,59 @@ def neko_gacha():
                     obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
                     Game.pic_chara = obtain_cara[0]
                     Game.chara_no = chara_list.index(Game.pic_chara) 
-                    Game.anime_flag = True 
-                    stop2 = 0
-                     
-        if Game.anime_flag:
-            count = Game.count % 10
-            if count >= len(g_list):
-                count = 0
-                stop1 += 1
-            Game.surface.blit(g_list[count], (0,0))
-            if stop1 >= 20:
-                Game.anime_flag = False
-                Game.print_flag =True
-                stop1 = 0 
-
-        elif Game.print_flag:
-            stop2 += 1
-            Game.surface.fill((0,50,100))
-            Game.surface.blit(gacha_pic_msg, [100,50])
-            Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
-            if stop2 >= 100:
-                stop1 += 1
-                Game.item -= 50     # アイテムを消費
-            if Game.item >= 50 and stop2 >= 20:
-                Game.surface.blit(gacha_msg, [15,500])
-                if stop1 >= 30:
-                    stop1 = 0
-                    not_gacha_flag = False
-            if Game.item < 50:
-                if Game.on_okkey():
-                    if stop1 >= 30:
-                        stop1 = 0
-                        not_gacha_flag = True
- 
-            
+                    Game.anime_flag = True          
+                if Game.anime_flag:
+                    count = Game.count % 10
+                    if count >= len(g_list):
+                        count = 0
+                        stop1 += 1
+                    Game.surface.blit(g_list[count], (0,0))
+                    if stop1 >= 20:
+                        Game.item -= 50     # アイテムを消費
+                        Game.anime_flag = False
+                        Game.print_flag =True
+                        stop1 = 0 
+                if Game.print_flag:
+                    Game.surface.fill((0,50,100))
+                    Game.surface.blit(gacha_pic_msg, [100,50])
+                    Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
+                    stop2 += 0
+                    if Game.item >= 50:
+                        if stop2 >= 20:
+                            Game.surface.blit(gacha_msg, [15,500])
+                            if Game.on_okkey():
+                                not_gacha_flag = False   
+                                Game.print_flag = False 
+                                Game.surface.fill((248,0,0))
+                                pygame.draw.rect(Game.surface, (255,255,255), (30,30,1140,644))
+                                Game.surface.blit(gacha_error_msg, [20,300]) 
+                                flash_masage(map_return_msg_list, [400,500])
+                    else:
+                        if Game.on_okkey():
+                            Game.gacha = False
+                            not_gacha_flag = True
+                            Game.print_flag = False 
 
         return Game.chara_no
 
-# 音楽読み込み
-m1 = pygame.mixer.Sound("music/1.wav") 
-m1.set_volume(0.05)
-m2 = pygame.mixer.Sound("music/2.wav") 
-m2.set_volume(0.05)
-m3 = pygame.mixer.Sound("music/3.wav") 
-m3.set_volume(0.05)
-m4 = pygame.mixer.Sound("music/1.wav") 
-m4.set_volume(0.05)
-m5 = pygame.mixer.Sound("music/2.wav") 
-m5.set_volume(0.05)
-m6 = pygame.mixer.Sound("music/3.wav") 
-m6.set_volume(0.05)
+# BGM
 music_flag = 1
+t_s_bgm = pygame.mixer.Sound("music/title_start_bgm.wav") 
+t_s_bgm.set_volume(0.05)
+map_bgm = pygame.mixer.Sound("music/map_bgm.wav") 
+map_bgm.set_volume(0.05)
+gacha_bgm = pygame.mixer.Sound("music/gacha_bgm.wav") 
+gacha_bgm.set_volume(0.05)
+g_o_bgm = pygame.mixer.Sound("music/game_over_bgm.wav") 
+g_o_bgm.set_volume(0.3)
+
+# SE
+se1 = pygame.mixer.Sound("music/se/atack_se.wav")
+se1.set_volume(0.3)
+se2 = pygame.mixer.Sound("music/se/game_over_se.wav")
+se2.set_volume(0.2)
+se3 = pygame.mixer.Sound("music/se/damage_se.wav")
+se3.set_volume(0.2)
 
 # 画像読み込み
 title_bg = pygame.image.load("bg_images/title_img.png")
@@ -175,7 +178,7 @@ def main():
         # タイトル画面
         if Game.phase == Phase.TITLE:
             if music_flag == 1:
-                m1.play(-1)
+                t_s_bgm.play(-1)
                 music_flag = 0
             Game.surface.blit(title_bg,(0,0))
             flash_masage(title_msg_list, [400,550])
@@ -191,27 +194,26 @@ def main():
                 Game.count_down -= 1
             Game.count_text = str(Game.count_down).rjust(3) if Game.wait_count > 0 else 'ENTER!'
             Game.surface.blit(font.render(Game.count_text, True, (0, 0, 0)), (10, 650))
-            # pygame.display.flip()
             if Game.on_0key(): # 仮
                 Game.phase = Phase.MAP 
                 if music_flag == 0:
-                    m1.stop()
+                    t_s_bgm.stop()
                     music_flag = 2
 
             elif Game.wait_count <= 0:
                 if Game.on_okkey():
+                    if music_flag == 0:
+                        t_s_bgm.stop()
+                        music_flag = 2
                     Game.phase = Phase.MAP 
                     Game.move_flag = True
-                    if music_flag == 0:
-                        m1.stop()
-                        music_flag = 2
+    
   
         # マップ画面        
         elif Game.phase == Phase.MAP:
             if music_flag ==2:
-                m2.play(-1)
+                map_bgm.play(-1)
                 music_flag = 0
-            # Game.surface.blit(gacha_bg,(0,0))
             if Game.count % 5 == 0:
                 Game.player_count += 1
             if Game.count % 9 == 0:
@@ -231,26 +233,39 @@ def main():
             # HP
             Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
             
+            # 効果音
+            if Game.se_flag == 1:
+                se1.play(0)
+                Game.se_flag = 0
+            if Game.se_flag == 3:
+                se3.play(0)
+                Game.se_flag = 0
+                
+            
             # ガチャ画面へ
             if Game.on_gkey():
                 Game.phase = Phase.GACHAGACHA
+                if Game.se_flag == 4:
+                    gacha_se.play(0)
+                    Game.se_flag = 0
                 if music_flag == 0:
-                    m2.stop()
+                    map_bgm.stop()
                     music_flag = 3
                     
             # ボスマップへ
             elif Game.boss_flag:
                 Game.phase = Phase.BOSS
                 if music_flag == 0:
-                    m2.stop()
+                    map_bgm.stop()
                     music_flag = 4
                     
             # HPが０になったらゲームオーバー
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
                 if music_flag == 0:
-                    m2.stop()
-                    music_flag = 5
+                    map_bgm.stop()
+                    Game.se_flag = 9
+                    music_flag = 9
 
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
@@ -271,33 +286,46 @@ def main():
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
             if music_flag == 3:
-                m3.play(-1)
+                gacha_bgm.play(-1)
                 music_flag = 0
             Game.surface.blit(gacha_bg,(0,0))
             neko_gacha()
+            # アイテムカウンタ
+            Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
+
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
                 Game.print_flag = False
                 if music_flag == 0:
-                    m3.stop()
+                    gacha_bgm.stop()
                     music_flag = 2
                 # 元々いたマップに戻る
                 if Game.boss_map:
+                    if music_flag== 0:
+                        gacha_bgm.stop()
+                        music_flag = 4
                     Game.phase = Phase.BOSS
                 else:
+                    if music_flag== 0:
+                        gacha_bgm.stop()
+                        music_flag = 2
                     Game.phase = Phase.MAP
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
-            if music_flag == 5:
-                m2.play(-1)
+            if music_flag == 9:
+                g_o_bgm.play(-1)
                 music_flag = 0
+            if Game.se_flag == 9:
+                se2.play(0)
+                Game.se_flag = 0
             Game.surface.blit(gameover_bg, (0,0))
-            flash_masage(retry_msg_list, [420,650])
+            flash_masage(retry_msg_list, [390,650])
         
             if Game.on_okkey():
                 if music_flag == 0:
-                    m2.stop()
+                    g_o_bgm.stop()
+                    music_flag = 1
                 Game.is_gameover = False
                 main()
                 

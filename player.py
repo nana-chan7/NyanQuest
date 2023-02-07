@@ -40,12 +40,6 @@ class Player(pygame.sprite.Sprite, Character):
         
         super().__init__()
         
-        # SE
-        self.n1 = pygame.mixer.Sound("music/se/nakigoe1.wav")
-        self.n1.set_volume(0.05)
-        self.n2 = pygame.mixer.Sound("music/se/nakigoe2.wav")
-        self.n2.set_volume(0.05)
-        
         self.chara_no = 0
         # キャラクター画像
         self.all_image_list = [a_list, b_list, c_list, d_list]
@@ -134,21 +128,8 @@ class Player(pygame.sprite.Sprite, Character):
         if self.rect.y > 704 or Game.hp <= 0:
             Game.is_gameover = True 
         
-        # # 踏み攻撃
-        # if Game.field.step_on_collision():
-        #     Game.item += 50
-            
         if Game.field.damage_collision():
             Game.hp -= 10
-    
-        
-        # ダメージ音
-        if Game.se_flag == 1:
-            self.n1.play(0)
-            Game.se_flag = 0
-        if Game.se_flag == 2:
-            self.n2.play(0)
-            Game.se_flag = 0
             
     # ジャンプ処理    
     def jump(self):

@@ -5,6 +5,7 @@ from enemy import Enemy
 # from enemy import Enemy, Boss
 from game import Game
 class Filed:
+
     def __init__(self,level_data): 
         
         # セットアップ
@@ -114,13 +115,14 @@ class Filed:
         player = self.player.sprite
         flag = pygame.sprite.spritecollide(player, self.enemy.sprites(), False)
         if len(flag) != 0:
-            Game.se_flag = 1
+            Game.se_flag = 3
             Game.hp -= 5
             return True
         # マップ1でボスに接触するとボスマップへ遷移 
         flag_boss = pygame.sprite.spritecollide(player, self.boss.sprites(), False)
         # ボスマップの時はゲームクリア
         if len(flag_boss) != 0: 
+            Game.se_flag = 3
             # if Game.boss_map:
             #     Game.is_clear = True
             if not Game.boss_flag:
@@ -133,6 +135,7 @@ class Filed:
         player = self.player.sprite
         step_on_enemy = pygame.sprite.spritecollide(player, self.enemy, True)
         if step_on_enemy:
+            Game.se_flag = 1
             oldrect = player.rect
             for enemy in step_on_enemy:
             # 上からは踏み攻撃 
