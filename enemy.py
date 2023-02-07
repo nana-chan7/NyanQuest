@@ -72,12 +72,11 @@ class Boss(pygame.sprite.Sprite, Character):
         self.rect = self.image.get_rect(topleft=pos)
         
         
-    # キャラクターによって画像リストの差し替え
+    # 画像リストの差し替え
     def change_image_list(self, all_list, boss_no):
         self.image_list = all_list[boss_no]
         return self.image_list
 
-      
     # 更新処理            
     def update(self, x_shift):
         self.set_enemy_animation(self.image_list)

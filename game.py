@@ -20,7 +20,7 @@ class Game:
     is_clear = False        # ゲームクリアフラグ
     
     # タイマー処理
-    count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
+    count_down, wait_count, count_text = 10, 300, '10'.center(5)
 
     # ガチャ処理等
     item = 0                    # 所持アイテム(初期値：０)
@@ -53,9 +53,7 @@ class Game:
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号
     boss_count = 0        # ボスキャラアニメーション番号
-    
-    # 雑多組
-    enemy_self = 0
+    atack_count = 0
     
     # イベントチェック処理
     @classmethod
