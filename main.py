@@ -285,7 +285,7 @@ def main():
             neko_gacha()
             # アイテムカウンタ
             Game.surface.blit(item_msg,(50,60))
-            Game.surface.blit(frame_msg,(50,60))
+            Game.surface.blit(frame_img,(0,0))
             Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
 
             # 戻るボタンを押したら、マップ画面へ戻る
