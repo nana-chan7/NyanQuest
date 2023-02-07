@@ -137,7 +137,7 @@ gacha_bgm.set_volume(0.05)
 g_o_bgm = pygame.mixer.Sound("music/game_over_bgm.wav") 
 g_o_bgm.set_volume(0.3)
 boss_bgm = pygame.mixer.Sound("music/boss_bgm.wav") 
-boss_bgm.set_volume(0.3)
+boss_bgm.set_volume(0.2)
 
 # SE
 se1 = pygame.mixer.Sound("music/se/atack_se.wav")
@@ -180,7 +180,14 @@ def main():
         Game.move_flag = False
         global music_flag
         Game.map = 0
-        Game.field.game_over_judge()
+
+        if Game.count % 5 == 0:
+            Game.player_count += 1
+        if Game.count % 9 == 0:
+            Game.enemy_count += 1
+        if Game.count % 9 == 0:
+            Game.enemy_count += 1
+
         
         # タイトル画面
         if Game.phase == Phase.TITLE:
@@ -220,17 +227,12 @@ def main():
             if music_flag ==2:
                 map_bgm.play(-1)
                 music_flag = 0
-            if Game.count % 5 == 0:
-                Game.player_count += 1
-            if Game.count % 9 == 0:
-                Game.enemy_count += 1
-            if Game.count % 9 == 0:
-                Game.enemy_count += 1
             Game.surface.fill((226,243,255))
             # 背景
             Game.surface.blit(map1_bg, (0, 0))
             # マップ表示
             Game.field.run()
+            Game.field.game_over_judge()
             # フレーム
             Game.surface.blit(frame_img, (0, 0))
             # 操作方法表示
@@ -313,18 +315,14 @@ def main():
                     
         # ボスマップ画面
         if Game.phase == Phase.BOSS:
-            if music_flag ==2:
-                map_bgm.play(-1)
+            if music_flag == 4:
+                boss_bgm.play(-1)
                 music_flag = 0
-            if Game.count % 5 == 0:
-                Game.player_count += 1
-            if Game.count % 9 == 0:
-                Game.enemy_count += 1
-            if Game.count % 9 == 0:
-                Game.enemy_count += 1
+
             Game.surface.fill((191,104,98))
             Game.surface.blit(map1_bg, (0, 0))
             Game.field.run()
+            Game.field.game_over_judge()
             # フレーム
             Game.surface.blit(frame_img, (0, 0))
             # 操作方法表示
