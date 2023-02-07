@@ -35,11 +35,9 @@ class Game:
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
     hp_list = [100, 20, 40, 70]
+    jump_flag = False          # ジャンプフラグ 
     se_flag = 0     # SE
-                      
-    # プレイヤー処理関連
-    jump_flag = False          # ジャンプ   
-    
+     
     # 画面等処理関連
     map_no = 0              # マップ番号(初期値は０)
     direction_num = 0       # マップスクロール
@@ -49,6 +47,7 @@ class Game:
     boss_no = 0
     boss_flag = False       # ボスフラグ
     boss_map = False
+    time_count = 0
     
     player_count = 0      # プレイヤーキャラアニメーション番号
     enemy_count = 0       # エネミーキャラアニメーション番号
@@ -110,7 +109,7 @@ class Game:
     # ショートカット用
     @classmethod
     def on_skey(cls):
-        return K_0 in Game.keymap
+        return K_s in Game.keymap
     # 攻撃 右方向
     @classmethod
     def on_ckey(cls):
@@ -125,10 +124,9 @@ class Phase(Enum):
     TITLE = 1           # タイトル画面
     START = 10          # スタート    
     MAP = 20            # マップ 
-    BOSS = 30
+    BOSS = 30           # ボス  
     
     GACHAGACHA = 50      # ガチャ画面
-    # GACHARESULT = 60     # ガチャ結果画面
     
     GAME_CLEAR = 77          # ゲームクリア
     GAME_OVER = 99      # ゲームオーバー
