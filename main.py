@@ -22,7 +22,8 @@ def init_game_info():
 # フォント    
 font = pygame.font.Font("font/Ronde-B_square.otf", 55)       
 msg_font = pygame.font.Font("font/Ronde-B_square.otf", 45)   
-
+count_font = pygame.font.Font("font/Ronde-B_square.otf", 30)  
+ 
 # メッセージ点滅
 def flash_masage(image_list,pos):
     msg_count = 0
@@ -163,6 +164,8 @@ retry_msg_list = [retry_msg1, retry_msg2]
 clear_msg1 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (255,125,0))
 clear_msg2 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (25,203,138))
 clear_msg_list = [clear_msg1, clear_msg2]
+item_msg = count_font.render("ちゅ～る", True, (0,0,0))
+
 
 # メイン処理
 def main():                 
@@ -222,21 +225,23 @@ def main():
                 Game.enemy_count += 1
             if Game.count % 9 == 0:
                 Game.enemy_count += 1
-            Game.surface.fill((128,224,235))
+            Game.surface.fill((226,243,255))
             # 背景
-            if Game.boss
-            Game.surface.blit(map1_bg, (0, 0))
+            if Game.boss_flag == False:
+                Game.surface.blit(map1_bg, (0, 0))
+            elif Game.boss_flag:
+                Game.surface.blit(boss_bg, (0, 0))
             # マップ表示
             Game.field.run()
             # フレーム
             Game.surface.blit(frame_img, (0, 0))
-
             # 操作方法表示
-            Game.surface.blit(key_menu_img,(1000,10))
+            Game.surface.blit(key_menu_img,(950,45))
             # アイテムカウンタ
-            Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
+            Game.surface.blit(item_msg,(50,60))
+            Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
             # HP
-            Game.surface.blit(font.render(str(Game.hp), True, (0, 0, 0)), (10, 100))
+            Game.surface.blit(msg_font.render("HP : "+str(Game.hp), True, (0, 0, 0)), (60, 100))
             
             # 効果音
             if Game.se_flag == 1:
@@ -258,7 +263,14 @@ def main():
                 if music_flag == 0:
                     map_bgm.stop()
                     music_flag = 3
-            
+                    
+            # ボスマップへ
+            elif Game.boss_flag:
+                Game.phase = Phase.BOSS
+                if music_flag == 0:
+                    map_bgm.stop()
+                    music_flag = 4
+
             # HPが０になったらゲームオーバー
             if Game.is_gameover:
                 Game.phase = Phase.GAME_OVER
@@ -266,7 +278,6 @@ def main():
                     map_bgm.stop()
                     Game.se_flag = 9
                     music_flag = 9
-
 
             if Game.is_clear:
                 Game.boss_flag = False
@@ -280,7 +291,8 @@ def main():
             Game.surface.blit(gacha_bg,(0,0))
             neko_gacha()
             # アイテムカウンタ
-            Game.surface.blit(font.render(str(Game.item), True, (0, 0, 0)), (10, 30))
+            Game.surface.blit(item_msg,(50,60))
+            Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
 
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
@@ -299,6 +311,25 @@ def main():
                         gacha_bgm.stop()
                         music_flag = 2
                     Game.phase = Phase.MAP
+                    
+        # ボスマップ画面
+        if Game.phase == Phase.BOSS:
+            Game.boss_flag = False
+            Game.boss_map = True
+            Game.surface.blit(boss_bg, (0, 0))
+            Game.field.run()
+            if music_flag == 4:
+                pass
+            if Game.on_gkey():
+                Game.phase = Phase.GACHAGACHA
+                if music_flag == 0:
+                    
+                    music_flag = 3
+
+            if Game.is_clear:
+                Game.boss_flag = False
+                Game.phase = Phase.GAME_CLEAR
+
    
         # ゲームオーバー           
         elif Game.phase == Phase.GAME_OVER:
