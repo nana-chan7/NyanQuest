@@ -131,6 +131,12 @@ m2 = pygame.mixer.Sound("music/2.wav")
 m2.set_volume(0.05)
 m3 = pygame.mixer.Sound("music/3.wav") 
 m3.set_volume(0.05)
+m4 = pygame.mixer.Sound("music/1.wav") 
+m4.set_volume(0.05)
+m5 = pygame.mixer.Sound("music/2.wav") 
+m5.set_volume(0.05)
+m6 = pygame.mixer.Sound("music/3.wav") 
+m6.set_volume(0.05)
 music_flag = 1
 
 # 画像読み込み
@@ -298,7 +304,7 @@ def main():
         # ゲームクリア
         elif Game.phase == Phase.GAME_CLEAR:
             Game.surface.blit(gameclear_bg, (0,0))
-            flash_masage(clear_msg_list, [380,650])
+            flash_masage(clear_msg_list, [350,650])
             if Game.on_okkey():
                 # if music_flag == 0:
                 #     m2.stop()

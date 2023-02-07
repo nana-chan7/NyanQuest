@@ -13,7 +13,8 @@ class Filed:
         self.current_x = 0
         
         self.map = Game.map_no         # マップ番号(初期値は１)
-
+        self.clear = False       # クリア判定
+        
     # マップ(フィールド全体)処理
     def setup_level(self, layout):
        self.map = Game.map_no         # マップ番号(初期値は１)
@@ -27,7 +28,7 @@ class Filed:
        Enemy.containers = all, self.enemy
        self.boss = pygame.sprite.GroupSingle()      
        
-       self.clear = False       # クリア判定
+       
        
        for row_index, row in enumerate(layout):
            for col_index, cell in enumerate(row):
@@ -125,7 +126,7 @@ class Filed:
             if not Game.boss_flag:
                 player.rect.x = 30
                 player.rect.y = 30
-                Game.boss_flag = True  
+                Game.boss_flag = True 
       
     # アタック判定          
     def step_on_collision(self):
@@ -139,7 +140,7 @@ class Filed:
                     Game.item += 40
                     return True
 
-        
+    # 描画処理
     def run(self):
         # プレイヤー
         self.player.update()
@@ -186,7 +187,7 @@ class Filed:
             for enemy in enemies:
                 enemy.kill() 
         # ボスマップへ遷移            
-        elif Game.boss_flag and not Game.is_clear and not Game.boss_map:
+        elif Game.boss_flag and not Game.is_clear:
             tiles = self.tiles.sprites()
             player = self.player.sprite
             enemies = self.enemy.sprites()
