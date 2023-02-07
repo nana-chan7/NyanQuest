@@ -20,7 +20,7 @@ class Game:
     is_clear = False        # ゲームクリアフラグ
     
     # タイマー処理
-    count_down, wait_count, count_text = 10, 300, '10'.rjust(3) # 5, 300, '5'.rjust(3)
+    count_down, wait_count, count_text = 10, 300, '10'.center(5)
 
     # ガチャ処理等
     item = 0                    # 所持アイテム(初期値：０)
@@ -35,25 +35,24 @@ class Game:
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
     hp_list = [100, 20, 40, 70]
+    jump_flag = False          # ジャンプフラグ 
     se_flag = 0     # SE
-                      
-    # プレイヤー処理関連
-    jump_flag = False          # ジャンプ   
-    
+     
     # 画面等処理関連
     map_no = 0              # マップ番号(初期値は０)
     direction_num = 0       # マップスクロール
     move_flag = True        # 移動可能フラグ
     block_no = 0            # ブロック番号
     enemy_no = 0            # エネミーキャラ番号
+    boss_no = 0
     boss_flag = False       # ボスフラグ
     boss_map = False
+    time_count = 0
     
     player_count = 0      # プレイヤーキャラアニメーション番号
-    enemy_count = 0       # エネミーキャラアニメーション番号x 
-    
-    # 雑多組
-    enemy_self = 0
+    enemy_count = 0       # エネミーキャラアニメーション番号
+    boss_count = 0        # ボスキャラアニメーション番号
+    atack_count = 0
     
     # イベントチェック処理
     @classmethod
@@ -107,10 +106,10 @@ class Game:
     @classmethod
     def on_returnkey(cls):
         return K_r in Game.keymap
-    # 仮用
+    # ショートカット用
     @classmethod
-    def on_0key(cls):
-        return K_0 in Game.keymap
+    def on_skey(cls):
+        return K_s in Game.keymap
     # 攻撃 右方向
     @classmethod
     def on_ckey(cls):
@@ -125,10 +124,9 @@ class Phase(Enum):
     TITLE = 1           # タイトル画面
     START = 10          # スタート    
     MAP = 20            # マップ 
-    BOSS = 30
+    BOSS = 30           # ボス  
     
     GACHAGACHA = 50      # ガチャ画面
-    # GACHARESULT = 60     # ガチャ結果画面
     
     GAME_CLEAR = 77          # ゲームクリア
     GAME_OVER = 99      # ゲームオーバー

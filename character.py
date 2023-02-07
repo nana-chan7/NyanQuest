@@ -27,7 +27,7 @@ class Character:
     # エネミーキャラアニメーション設定  
     def set_enemy_animation(self, image_list):
         self.image_list = image_list
-        if Game.enemy_count >= len(self.image_list):
+        if Game.enemy_count >= len(image_list):
             Game.enemy_count = 0
         self.image_no = Game.enemy_count
         self.image = self.image_list[self.image_no]

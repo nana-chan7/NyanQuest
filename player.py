@@ -122,15 +122,7 @@ class Player(pygame.sprite.Sprite, Character):
         # 重力
         else:        
             self.apply_gravity()
-            
-            
-        # 画面外に落下するか、HPが０になった場合はゲームオーバー
-        if self.rect.y > 704 or Game.hp <= 0:
-            Game.is_gameover = True 
-        
-        if Game.field.damage_collision():
-            Game.hp -= 10
-            
+                        
     # ジャンプ処理    
     def jump(self):
         self.jump_coount += 1
