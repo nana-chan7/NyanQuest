@@ -40,11 +40,19 @@ class Player(pygame.sprite.Sprite, Character):
         # 平安猫
         e_1 = pygame.image.load("chara_images/4/1.png")
         e_2 = pygame.image.load("chara_images/4/2.png")
-        e_3 = pygame.transform.flip(d_1, 1, 0)
-        e_4 = pygame.transform.flip(d_2, 1, 0)
+        e_3 = pygame.transform.flip(e_1, 1, 0)
+        e_4 = pygame.transform.flip(e_2, 1, 0)
         e_5 = pygame.image.load("chara_images/4/5.png")
         e_6 = pygame.image.load("chara_images/4/6.png")
         e_list = [e_1, e_2, e_3, e_4, e_5, e_6]
+        # # ワ…猫
+        # f_1 = pygame.image.load("chara_images/5/1.png")
+        # f_2 = pygame.image.load("chara_images/5/2.png")
+        # f_3 = pygame.transform.flip(f_1, 1, 0)
+        # f_4 = pygame.transform.flip(f_2, 1, 0)
+        # f_5 = pygame.image.load("chara_images/5/5.png")
+        # f_6 = pygame.image.load("chara_images/5/6.png")
+        # f_list = [f_1, f_2, f_3, f_4, f_5, f_6]
         
         super().__init__()
         

@@ -35,14 +35,18 @@ def flash_masage(image_list,pos):
     
 # ガチャメッセージ・SE
 not_gacha_flag = True
-gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
+gacha_msg = font.render("何が出るかな？", True, (0,0,0))
+re_gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
-gacha_ok_msg = font.render("アイテムが50個以上あります！ガチャを回しますか？", True, (0,0,0))
+gacha_ok_msg = msg_font.render("アイテムが50個以上あります！ガチャを回しますか？", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
 map_return_msg1 = msg_font.render("RETURN MAP : R-KEY", True, (255,0,0))
 map_return_msg2 = msg_font.render("RETURN MAP : R-KEY", True, (255,187,189))
 map_return_msg_list = [map_return_msg1, map_return_msg2]
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
+enter_msg1 = msg_font.render("PUSH ENTERKEY", True, (255,125,0))
+enter_msg2 = msg_font.render("PUSH ENTERKEY", True, (25,203,138))
+enter_msg_list = [enter_msg1, enter_msg2] 
 
 # ガチャ画像
 gacha_bg = pygame.image.load("bg_images/gacha_img.png")
@@ -58,10 +62,11 @@ chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
 chara3 = pygame.image.load("chara_images/gacha/3.png")
+chara4 = pygame.image.load("chara_images/gacha/4.png")
+# chara5 = pygame.image.load("chara_images/gacha/5.png")
 
 # ガチャ処理
 def neko_gacha():
-    count = 0
     global stop1, stop2, not_gacha_flag
     pos = (350,200)
     # 確率
@@ -78,41 +83,44 @@ def neko_gacha():
         flash_masage(map_return_msg_list, [400,500])
     # 所持アイテムが50以上だったらガチャを回す
     if Game.gacha:
-        stop1 += 1
-        if stop1 >= 20:
-            Game.surface.blit(gacha_ok_msg, [20,300]) 
-            if Game.on_okkey():
+        Game.gacha = False
+        Game.surface.blit(gacha_ok_msg, [76,100]) 
+        flash_masage(enter_msg_list, [500,620])
+        if Game.on_okkey():
+            stop1 = Game.count % 15
+            if stop1 >= len(g_list):
                 stop1 = 0
-                stop2 = Game.count % 10
-                if count >= len(g_list):
-                    count = 0
-                        stop1 += 1
-                    Game.surface.blit(g_list[count], (0,0))
-                    if stop1 >= 20:
-                        Game.item -= 50     # アイテムを消費
-                        Game.anime_flag = False
-                        Game.print_flag =True
-                        stop1 = 0 
-                if Game.print_flag:
-                    Game.surface.fill((0,50,100))
-                    Game.surface.blit(gacha_pic_msg, [100,50])
-                    Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
-                    stop2 += 0
-                    if Game.item >= 50:
-                        if stop2 >= 20:
-                            Game.surface.blit(gacha_msg, [15,500])
-                            if Game.on_okkey():
-                                not_gacha_flag = False   
-                                Game.print_flag = False 
-                                Game.surface.fill((248,0,0))
-                                pygame.draw.rect(Game.surface, (255,255,255), (30,30,1140,644))
-                                Game.surface.blit(gacha_error_msg, [20,300]) 
-                                flash_masage(map_return_msg_list, [400,500])
-                    else:
+                stop2 += 1
+            Game.surface.blit(g_list[stop1], (0,0))
+            Game.surface.blit(gacha_msg, (10, 10))
+            if stop2 >= 30:
+                Game.item -= 50     # アイテムを消費
+                # ガチャ回す
+                obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
+                Game.pic_chara = obtain_cara[0]
+                Game.chara_no = chara_list.index(Game.pic_chara) 
+                Game.print_flag = True
+                stop2 = 0 
+            if Game.print_flag:
+                Game.surface.fill((0,50,100))
+                Game.surface.blit(gacha_pic_msg, [100,50])
+                Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
+                stop1 += 1
+                if Game.item >= 50:
+                    if stop1 >= 30:
+                        Game.surface.blit(re_gacha_msg, [15,500])
                         if Game.on_okkey():
-                            Game.gacha = False
-                            not_gacha_flag = True
                             Game.print_flag = False 
+                            Game.gacha = True
+                                # Game.surface.fill((248,0,0))
+                                # pygame.draw.rect(Game.surface, (255,255,255), (30,30,1140,644))
+                                # Game.surface.blit(gacha_error_msg, [20,300]) 
+                                # flash_masage(map_return_msg_list, [400,500])
+                # else:
+                #     if Game.on_okkey():
+                #         Game.gacha = False
+                #         not_gacha_flag = True
+                #         Game.print_flag = False 
 
         return Game.chara_no
         
@@ -162,9 +170,6 @@ clear_msg2 = msg_font.render("RESTURN TITLE : PUSH ENTERKEY", True, (25,203,138)
 clear_msg_list = [clear_msg1, clear_msg2]
 clear_after_msg1 = msg_font.render("クリア記念！キャラクターの一覧を見ますか？", True, (0,0,0))
 clear_after_msg2 = msg_font.render("ゲームをやめるときはESCキーで終了", True, (0,0,0))
-chara_table_msg1 = msg_font.render("PUSH ENTERKEY", True, (255,125,0))
-chara_table_msg2 = msg_font.render("PUSH ENTERKEY", True, (25,203,138))
-chara_table_msg_list = [chara_table_msg1, chara_table_msg2] 
 
 item_msg = count_font.render("ちゅ～る", True, (0,0,0))
 
@@ -284,7 +289,7 @@ def main():
             # アイテムカウンタ
             Game.surface.blit(item_msg,(50,60))
             Game.surface.blit(frame_img,(0,0))
-            Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
+            Game.surface.blit(msg_font.render(": "+str(Game.item), True, (255, 0, 0)), (180, 50))
 
             # 戻るボタンを押したら、マップ画面へ戻る
             if Game.on_returnkey():
@@ -376,7 +381,7 @@ def main():
                 Game.surface.blit(clear_after_msg1, (80,300))
                 Game.surface.blit(clear_after_msg2, (80,400))
                 if Game.time_count >= 65:
-                    flash_masage(chara_table_msg_list, [350,650])
+                    flash_masage(enter_msg_list, [350,650])
                     # if Game.on_okkey():
                     #     Game.surface.blit(chara_table_img, (0,0))
                         # flash_masage(clear_msg_list,[400,600])
