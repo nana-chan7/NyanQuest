@@ -38,13 +38,11 @@ def flash_masage(image_list,pos):
 gacha_se = pygame.mixer.Sound("music/se/gacha_se.wav")
 gacha_se.set_volume(0.7)
 gacha_msg = font.render("何が出るかな？", True, (141,255,44))
-re_map_msg = count_font.render("戻るときはRキーを押してね！", True, (0,0,0))
-re_gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (255,95,148))
 gacha_pic_msg = font.render("結果発表！！！", True, (255,60,39))
 gacha_ok_msg = msg_font.render("アイテムが50個以上あります！ガチャを回しますか？", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
-map_return_msg1 = msg_font.render("RETURN MAP : R-KEY", True, (255,0,0))
-map_return_msg2 = msg_font.render("RETURN MAP : R-KEY", True, (255,187,189))
+map_return_msg1 = font.render("RETURN MAP : R-KEY", True, (255,0,0))
+map_return_msg2 = font.render("RETURN MAP : R-KEY", True, (255,187,189))
 map_return_msg_list = [map_return_msg1, map_return_msg2]
 enter_msg1 = msg_font.render("PUSH ENTERKEY", True, (255,125,0))
 enter_msg2 = msg_font.render("PUSH ENTERKEY", True, (25,203,138))
@@ -76,7 +74,7 @@ def neko_gacha():
     # global not_gacha_flag
     pos = (500,30)
     # 確率
-    prob = [0.3, 0.8, 0.6, 0.5, 0.4, 0.7] 
+    prob = [0.3, 0.5, 0.6, 0.5, 0.4, 0.6] 
     # ガチャ一回につき、一体排出
     PIC = 1
     obtain_cara = None
@@ -121,23 +119,9 @@ def neko_gacha():
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
             Game.blit_item -= 50
             stop1 += 1
-            if Game.blit_item >= 50:
-                if stop1 >= 60:
-                    Game.surface.blit(re_gacha_msg, [15,500])
-                    if stop1 >= 90:
-                        Game.item = Game.blit_item
-                        if Game.on_okkey():
-                            stop1 = 0
-                            Game.print_flag = False 
-                            Game.gacha = True
-                            animation_flag = True
-                            
-            if Game.blit_item < 50:
-                if Game.on_okkey():
-                    Game.gacha = False
-                    Game.print_flag = False 
-                    Game.item = Game.blit_item
-
+            if stop1 >= 60:
+                flash_masage(map_return_msg_list, [420,300])
+                       
         return Game.chara_no 
     
 # BGM
@@ -245,7 +229,7 @@ def main():
             # フレーム
             Game.surface.blit(frame_img, (0, 0))
             # 操作方法表示
-            Game.surface.blit(key_menu_img,(950,45))
+            Game.surface.blit(key_menu_img,(900,45))
             # アイテムカウンタ
             Game.surface.blit(item_msg,(50,60))
             Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
@@ -258,7 +242,7 @@ def main():
             if Game.recovery_flag:
                 if Game.item >= 30:
                     if Game.se_flag == 6:
-                        se1.play(0)
+                        se3.play(0)
                         Game.se_flag = 0
                     Game.item -= 30
                     Game.hp += 10
@@ -298,7 +282,6 @@ def main():
                     Game.se_flag = 9
                     music_flag = 9
                     
-                
         # ガチャ画面
         elif Game.phase == Phase.GACHAGACHA:
             if music_flag == 4:
@@ -340,7 +323,7 @@ def main():
             # フレーム
             Game.surface.blit(frame_img, (0, 0))
             # 操作方法表示
-            Game.surface.blit(key_menu_img,(950,45))
+            Game.surface.blit(key_menu_img,(900,45))
             # アイテムカウンタ
             Game.surface.blit(item_msg,(50,60))
             Game.surface.blit(msg_font.render(": "+str(Game.item), True, (0, 0, 0)), (180, 50))
@@ -353,7 +336,7 @@ def main():
             if Game.recovery_flag:
                 if Game.item >= 30:
                     if Game.se_flag == 6:
-                        se1.play(0)
+                        se3.play(0)
                         Game.se_flag = 0
                     Game.item -= 30
                     Game.hp += 10
@@ -371,19 +354,20 @@ def main():
                 se3.play(0)
                 Game.se_flag = 0
     
-            
+            # ガチャ画面
             if Game.on_gkey():
                 if music_flag == 0:
                     boss_bgm.stop()
                     music_flag = 4
                 Game.phase = Phase.GACHAGACHA
+            # ゲームオーバー
             if Game.is_gameover:
                 if music_flag ==0:
                     boss_bgm.stop()
                     music_flag = 9
                     Game.se_flag = 9
                 Game.phase = Phase.GAME_OVER
-            
+            # ゲームクリア
             if Game.is_clear:
                 if music_flag == 0:
                     boss_bgm.stop()
@@ -391,7 +375,7 @@ def main():
                 Game.boss_flag = False
                 Game.phase = Phase.GAME_CLEAR
 
-        # ゲームオーバー           
+        # ゲームオーバー画面         
         elif Game.phase == Phase.GAME_OVER:
             if music_flag == 9:
                 g_o_bgm.play(-1)
@@ -402,26 +386,20 @@ def main():
             Game.surface.blit(gameover_bg, (0,0))
             Game.surface.blit(clear_after_msg2, [135,650])
 
-        # ゲームクリア
+        # ゲームクリア画面 
         elif Game.phase == Phase.GAME_CLEAR:
             Game.time_count += 1
             if music_flag == 8:
                 clear_bgm.play(0)
                 music_flag = 0
             Game.surface.blit(gameclear_bg, (0,0))
-            if Game.time_count >= 50:
-                Game.surface.blit(clear_after_msg1, (80,300))
-                Game.surface.blit(clear_after_msg2, (80,400))
-                if Game.time_count >= 65:
-                    flash_masage(enter_msg_list, [350,650])
+            if Game.time_count >= 70:
+                Game.surface.blit(clear_after_msg1, [135,590])
+                Game.surface.blit(clear_after_msg2, [150,650])
+                if Game.time_count >= 110:
+                    flash_masage(enter_msg_list, [470,450])
                     if Game.on_okkey():
                         Game.surface.blit(chara_table_img, (0,0))
-                        flash_masage(clear_msg_list,[400,600])
-                        if Game.on_okkey():
-                            if music_flag == 0:
-                                pass
-                            Game.is_gameclear = False
-                            main()
   
         pygame.display.update()
         clock.tick(30)
