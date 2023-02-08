@@ -115,7 +115,6 @@ def neko_gacha():
                 Game.se_flag = 0
             Game.surface.blit(gacha_bg, (0,0))
             Game.surface.blit(gacha_pic_msg, [450,620])
-            Game.surface.blit(re_map_msg, [1000,620])
             Game.surface.blit(Game.pic_chara, (pos))      # 結果表示
             Game.blit_item -= 50
             stop1 += 1
@@ -145,6 +144,8 @@ se2 = pygame.mixer.Sound("music/se/game_over_se.wav")
 se2.set_volume(0.2)
 se3 = pygame.mixer.Sound("music/se/damage_se.wav")
 se3.set_volume(0.2)
+se4 = pygame.mixer.Sound("music/se/hp_se.wav")
+se4.set_volume(0.3)
 
 # 画像読み込み
 title_bg = pygame.image.load("bg_images/title_img.png")
@@ -242,7 +243,7 @@ def main():
             if Game.recovery_flag:
                 if Game.item >= 30:
                     if Game.se_flag == 6:
-                        se3.play(0)
+                        se4.play(0)
                         Game.se_flag = 0
                     Game.item -= 30
                     Game.hp += 10
@@ -336,7 +337,7 @@ def main():
             if Game.recovery_flag:
                 if Game.item >= 30:
                     if Game.se_flag == 6:
-                        se3.play(0)
+                        se4.play(0)
                         Game.se_flag = 0
                     Game.item -= 30
                     Game.hp += 10
