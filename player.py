@@ -5,7 +5,7 @@ from character import Character
 class Player(pygame.sprite.Sprite, Character):
     def __init__(self, pos):
         # プレイヤーキャラ画像
-        # 棒人間
+        # 猫王
         a_1 = pygame.image.load("chara_images/0/1.png")
         a_2 = pygame.image.load("chara_images/0/2.png")
         a_3 = pygame.transform.flip(a_1, 1, 0)
@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite, Character):
         a_5 = pygame.image.load("chara_images/0/5.png")
         a_6 = pygame.image.load("chara_images/0/6.png")
         a_list = [a_1, a_2, a_3, a_4, a_5, a_6]
-        # 猫王
+        # 
         b_1 = pygame.image.load("chara_images/1/1.png")
         b_2 = pygame.image.load("chara_images/1/2.png")
         b_3 = pygame.transform.flip(b_1, 1, 0)
