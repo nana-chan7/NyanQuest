@@ -24,10 +24,9 @@ class Game:
 
     # ガチャ処理等
     item = 0                    # 所持アイテム(初期値：０)
-    gacha = True                # ガチャフラグ
+    blit_item
+    gacha = False               # ガチャフラグ
     pic_chara = 0               # ピックキャラ
-    anime_flag = False          # ガチャ回転中アニメーションフラグ
-    print_flag = False          # 結果表示フラグ
     command_able =True          # キー押下判定用フラグ
     
     # プレイヤー(キャラクター)
