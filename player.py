@@ -45,20 +45,20 @@ class Player(pygame.sprite.Sprite, Character):
         e_5 = pygame.image.load("chara_images/4/5.png")
         e_6 = pygame.image.load("chara_images/4/6.png")
         e_list = [e_1, e_2, e_3, e_4, e_5, e_6]
-        # # ワ…猫
-        # f_1 = pygame.image.load("chara_images/5/1.png")
-        # f_2 = pygame.image.load("chara_images/5/2.png")
-        # f_3 = pygame.transform.flip(f_1, 1, 0)
-        # f_4 = pygame.transform.flip(f_2, 1, 0)
-        # f_5 = pygame.image.load("chara_images/5/5.png")
-        # f_6 = pygame.image.load("chara_images/5/6.png")
-        # f_list = [f_1, f_2, f_3, f_4, f_5, f_6]
+        # ワ…猫
+        f_1 = pygame.image.load("chara_images/5/1.png")
+        f_2 = pygame.image.load("chara_images/5/2.png")
+        f_3 = pygame.transform.flip(f_1, 1, 0)
+        f_4 = pygame.transform.flip(f_2, 1, 0)
+        f_5 = pygame.image.load("chara_images/5/5.png")
+        f_6 = pygame.image.load("chara_images/5/6.png")
+        f_list = [f_1, f_2, f_3, f_4, f_5, f_6]
         
         super().__init__()
         
         self.chara_no = 0
         # キャラクター画像
-        self.all_image_list = [a_list, b_list, c_list, d_list]
+        self.all_image_list = [a_list, b_list, c_list, d_list, e_list, f_list]
         self.image_list = self.change_image_list(self.all_image_list, Game.chara_no)
         
         self.image = self.set_chara_animation(self.image_list)
@@ -74,12 +74,12 @@ class Player(pygame.sprite.Sprite, Character):
         self.on_left_key = False
         self.move_dx = 0
         
-        self.hp_list = [100, 100, 200, 150, 120]
+        self.hp_list = [100, 100, 200, 150, 120, 80]
         self.hp = self.hp_list[Game.chara_no]
         
-        self.move_list = [2, 1, 2, 1,1]
-        self.jump_list1 = [15, 10, 18, 23, 12]
-        self.jump_list2 = [8, 5, 4, 6, 7]
+        self.move_list = [2, 1, 2, 1, 1, 3]
+        self.jump_list1 = [15, 10, 18, 23, 12, 20]
+        self.jump_list2 = [8, 5, 4, 6, 7, 6]
         
         self.se = 0
         

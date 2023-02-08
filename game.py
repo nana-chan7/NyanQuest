@@ -24,7 +24,7 @@ class Game:
 
     # ガチャ処理等
     item = 0                    # 所持アイテム(初期値：０)
-    blit_item
+    blit_item = 0
     gacha = False               # ガチャフラグ
     pic_chara = 0               # ピックキャラ
     command_able =True          # キー押下判定用フラグ
@@ -33,9 +33,10 @@ class Game:
     player_pos = None
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
-    hp_list = [100, 20, 40, 70, 100]
-    jump_flag = False          # ジャンプフラグ 
-    se_flag = 0     # SE
+    # hp_list = [100, 20, 40, 70, 100]
+    jump_flag = False               # ジャンプフラグ 
+    se_flag = 0                     # SE
+    recovery_flag = False           # HP回復
      
     # 画面等処理関連
     map_no = 0              # マップ番号(初期値は０)
@@ -109,14 +110,11 @@ class Game:
     @classmethod
     def on_skey(cls):
         return K_s in Game.keymap
-    # 攻撃 右方向
+    # HP回復
     @classmethod
     def on_ckey(cls):
         return K_c in Game.keymap
-    # 攻撃 左方向
-    @classmethod
-    def on_xkey(cls):
-        return K_x in Game.keymap
+
     
 # 段階処理
 class Phase(Enum):
