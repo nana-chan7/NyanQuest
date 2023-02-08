@@ -37,6 +37,7 @@ def flash_masage(image_list,pos):
 not_gacha_flag = True
 gacha_msg = font.render("アイテムが残っていますもう一度回しますか？", True, (0,0,0))
 gacha_pic_msg = font.render("結果発表！！！", True, (0,0,0))
+gacha_ok_msg = font.render("アイテムが50個以上あります！ガチャを回しますか？", True, (0,0,0))
 gacha_error_msg = font.render("アイテムが足りません！また集めたら来てね！", True, (0,0,0))
 map_return_msg1 = msg_font.render("RETURN MAP : R-KEY", True, (255,0,0))
 map_return_msg2 = msg_font.render("RETURN MAP : R-KEY", True, (255,187,189))
@@ -57,44 +58,34 @@ chara0 = pygame.image.load("chara_images/gacha/0.png")
 chara1 = pygame.image.load("chara_images/gacha/1.png")
 chara2 = pygame.image.load("chara_images/gacha/2.png")
 chara3 = pygame.image.load("chara_images/gacha/3.png")
+
 # ガチャ処理
 def neko_gacha():
     count = 0
     global stop1, stop2, not_gacha_flag
     pos = (350,200)
     # 確率
-    prob = [0.3, 0.8, 0.6, 0.5] 
+    prob = [0.3, 0.8, 0.6, 0.5, 0.4] 
     # ガチャ一回につき、一体排出
     PIC = 1
     obtain_cara = None
-    chara_list = [chara0, chara1, chara2, chara3]
-    if Game.item >= 50:
-        not_gacha_flag = False
-    
+    chara_list = [chara0, chara1, chara2, chara3, chara4]
     # 所持アイテムが50以下だったら
-    if not_gacha_flag:
-        Game.gacha = False
+    if not Game.gacha:
         Game.surface.fill((248,0,0))
         pygame.draw.rect(Game.surface, (255,255,255), (30,30,1140,644))
         Game.surface.blit(gacha_error_msg, [20,300]) 
         flash_masage(map_return_msg_list, [400,500])
-         
     # 所持アイテムが50以上だったらガチャを回す
-    elif not_gacha_flag == False:
-        stop2 += 1
-        Game.gacha = True
-        if stop2 >= 20:
-            if Game.gacha:
-                if Game.on_okkey():
-                    stop2 = 0
-                    obtain_cara = random.choices(chara_list , weights=prob, k=PIC)
-                    Game.pic_chara = obtain_cara[0]
-                    Game.chara_no = chara_list.index(Game.pic_chara) 
-                    Game.anime_flag = True          
-                if Game.anime_flag:
-                    count = Game.count % 10
-                    if count >= len(g_list):
-                        count = 0
+    if Game.gacha:
+        stop1 += 1
+        if stop1 >= 20:
+            Game.surface.blit(gacha_ok_msg, [20,300]) 
+            if Game.on_okkey():
+                stop1 = 0
+                stop2 = Game.count % 10
+                if count >= len(g_list):
+                    count = 0
                         stop1 += 1
                     Game.surface.blit(g_list[count], (0,0))
                     if stop1 >= 20:
@@ -124,7 +115,12 @@ def neko_gacha():
                             Game.print_flag = False 
 
         return Game.chara_no
-
+        
+    
+    
+    
+    
+    
 # BGM
 music_flag = 1
 t_s_bgm = pygame.mixer.Sound("music/title_start_bgm.wav") 
@@ -282,6 +278,8 @@ def main():
                 gacha_bgm.play(-1)
                 music_flag = 0
             Game.surface.blit(gacha_bg,(0,0))
+            if Game.item >= 50:
+                Game.gacha = True
             neko_gacha()
             # アイテムカウンタ
             Game.surface.blit(item_msg,(50,60))

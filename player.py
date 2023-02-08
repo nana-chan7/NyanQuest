@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite, Character):
         a_5 = pygame.image.load("chara_images/0/5.png")
         a_6 = pygame.image.load("chara_images/0/6.png")
         a_list = [a_1, a_2, a_3, a_4, a_5, a_6]
-        # 
+        # 鎧猫
         b_1 = pygame.image.load("chara_images/1/1.png")
         b_2 = pygame.image.load("chara_images/1/2.png")
         b_3 = pygame.transform.flip(b_1, 1, 0)
@@ -37,6 +37,14 @@ class Player(pygame.sprite.Sprite, Character):
         d_5 = pygame.image.load("chara_images/3/5.png")
         d_6 = pygame.image.load("chara_images/3/6.png")
         d_list = [d_1, d_2, d_3, d_4, d_5, d_6]
+        # 平安猫
+        e_1 = pygame.image.load("chara_images/4/1.png")
+        e_2 = pygame.image.load("chara_images/4/2.png")
+        e_3 = pygame.transform.flip(d_1, 1, 0)
+        e_4 = pygame.transform.flip(d_2, 1, 0)
+        e_5 = pygame.image.load("chara_images/4/5.png")
+        e_6 = pygame.image.load("chara_images/4/6.png")
+        e_list = [e_1, e_2, e_3, e_4, e_5, e_6]
         
         super().__init__()
         
@@ -58,12 +66,12 @@ class Player(pygame.sprite.Sprite, Character):
         self.on_left_key = False
         self.move_dx = 0
         
-        self.hp_list = [100, 100, 200, 150]
+        self.hp_list = [100, 100, 200, 150, 120]
         self.hp = self.hp_list[Game.chara_no]
         
-        self.move_list = [2, 1, 2, 1]
-        self.jump_list1 = [15, 10, 18, 23]
-        self.jump_list2 = [8, 5, 4, 6]
+        self.move_list = [2, 1, 2, 1,1]
+        self.jump_list1 = [15, 10, 18, 23, 12]
+        self.jump_list2 = [8, 5, 4, 6, 7]
         
         self.se = 0
         

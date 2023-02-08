@@ -34,7 +34,7 @@ class Game:
     player_pos = None
     chara_no = 0        # キャラクターナンバー(初期値は０)
     hp = 100
-    hp_list = [100, 20, 40, 70]
+    hp_list = [100, 20, 40, 70, 100]
     jump_flag = False          # ジャンプフラグ 
     se_flag = 0     # SE
      
